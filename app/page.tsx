@@ -67,15 +67,6 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <div className="flex items-center justify-center">
-                <Image
-                  src="/placeholder.svg?height=400&width=500"
-                  width={500}
-                  height={400}
-                  alt="Logistics Platform"
-                  className="rounded-lg object-cover"
-                />
-              </div>
             </div>
           </div>
         </section>
