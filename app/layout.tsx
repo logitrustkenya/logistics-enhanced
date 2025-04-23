@@ -1,18 +1,20 @@
-import type React from "react"
-import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css"
-import { Sidebar } from "@/components/sidebar"
-import { Header } from "@/components/header"
+"use client";
+
+import type React from "react";
+import { ThemeProvider } from "@/components/theme-provider";
+import "./globals.css";
+import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  // Check if the current path is the landing page
-  // This is a client component, so we'll use a simple approach
-  // that works on both server and client
-  const isLandingPage = children.props?.childProp?.segment === null
+  const pathname = usePathname();
+  const isLandingPage = pathname === "/";
+  const isAuthPage = pathname.startsWith("/auth");
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -22,8 +24,8 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          {isLandingPage ? (
-            // Landing page layout without sidebar and header
+          {isLandingPage || isAuthPage ? (
+            // Landing or Auth pages layout without sidebar and header
             <main>{children}</main>
           ) : (
             // Dashboard layout with sidebar and header
@@ -38,13 +40,7 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
 
-
-
-import './globals.css'
-
-export const metadata = {
-      generator: 'v0.dev'
-    };
+import './globals.css';
