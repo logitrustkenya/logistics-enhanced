@@ -434,31 +434,7 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold text-white">LogitrustKenya</h1>
         </div>
       </div>
-          </CardContent>
-
-          <CardFooter className="flex flex-col space-y-4">
-            <div className="text-center text-sm text-gray-300">
-              <Link href="/auth/forgot-password" className="text-lime-400 hover:text-lime-300">
-                Forgot your password?
-              </Link>
-            </div>
-            <div className="text-center text-sm text-gray-300">
-              Already have an account?{" "}
-              <Link href="/auth/signup" className="font-medium text-lime-400 hover:text-lime-300">
-                Sign up
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-
-      {/* Right side - Logo */}
-      <div className="flex-1 bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <Truck className="h-16 w-16 text-white mx-auto mb-4" />
-          <h1 className="text-3xl font-bold text-white">LogitrustKenya</h1>
-        </div>
-      </div>
     </div>
   )
 }
+
