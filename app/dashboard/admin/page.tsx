@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState("overview")
-
+// bevon huku ni kwako .
   // Mock data
   const stats = [
     {

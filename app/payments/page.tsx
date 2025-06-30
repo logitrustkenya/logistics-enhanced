@@ -98,7 +98,7 @@ export default function PaymentsPage() {
     switch (status) {
       case "completed":
         return (
-          <Badge variant="outline" className="flex items-center gap-1 text-green-600 border-green-200 bg-green-50">
+          <Badge variant="outline" className="flex items-center gap-1 text-custom-green border-custom-green bg-custom-green/20">
             <CheckCircle className="h-3 w-3" />
             Completed
           </Badge>
@@ -148,7 +148,7 @@ export default function PaymentsPage() {
             Export
           </Button>
           <Link href="/payments/wallet">
-            <Button size="sm" className="bg-green-600 hover:bg-green-700">
+            <Button size="sm" className="bg-custom-green hover:bg-[#9bc943]">
               <Wallet className="mr-2 h-4 w-4" />
               Wallet
             </Button>
@@ -251,8 +251,8 @@ export default function PaymentsPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <CreditCard className="h-5 w-5 text-green-600" />
+                <div className="h-10 w-10 rounded-full bg-custom-green/20 flex items-center justify-center">
+                  <CreditCard className="h-5 w-5 text-custom-green" />
                 </div>
                 <div>
                   <h3 className="font-medium">M-Pesa</h3>
@@ -292,10 +292,10 @@ export default function PaymentsPage() {
               </Button>
             </div>
             <div className="mt-4">
-              <Button className="w-full bg-green-600 hover:bg-green-700">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Add Payment Method
-              </Button>
+            <Button className="w-full bg-custom-green hover:bg-[#9bc943]">
+              <CreditCard className="mr-2 h-4 w-4" />
+              Add Payment Method
+            </Button>
             </div>
           </div>
         </CardContent>
