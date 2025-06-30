@@ -1,31 +1,13 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  BarChart3,
-  Box,
-  CreditCard,
-  Home,
-  Package,
-  Settings,
-  Truck,
-  Users,
-  MessageSquare,
-  Shield,
-  Menu,
-  X,
-} from "lucide-react"
+import { Truck, Users, BarChart3, Home } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
+import { useState } from "react"
+import { X } from "lucide-react"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function Sidebar({ className }: SidebarProps) {
+export const Sidebar = () => {
   const pathname = usePathname()
   const isMobile = useMobile()
   const [isOpen, setIsOpen] = useState(false)
@@ -34,117 +16,126 @@ export function Sidebar({ className }: SidebarProps) {
     setIsOpen(!isOpen)
   }
 
-  const sidebarItems = [
+  const menuItems = [
     {
-      title: "Dashboard",
+      label: "Overview",
       href: "/dashboard",
       icon: Home,
     },
     {
-      title: "Shipments",
+      label: "Shipments",
       href: "/shipments",
-      icon: Package,
-    },
-    {
-      title: "Providers",
-      href: "/providers",
       icon: Truck,
     },
     {
-      title: "Payments",
-      href: "/payments",
-      icon: CreditCard,
-    },
-    {
-      title: "Messages",
-      href: "/messages",
-      icon: MessageSquare,
-    },
-    {
-      title: "Analytics",
+      label: "Analytics",
       href: "/analytics",
       icon: BarChart3,
     },
     {
-      title: "Users",
-      href: "/users",
+      label: "Providers",
+      href: "/providers",
       icon: Users,
-    },
-    {
-      title: "Inventory",
-      href: "/inventory",
-      icon: Box,
-    },
-    {
-      title: "Security",
-      href: "/security",
-      icon: Shield,
-    },
-    {
-      title: "Settings",
-      href: "/settings",
-      icon: Settings,
     },
   ]
 
-  const sidebarContent = (
-    <>
-      <div className="flex h-14 items-center border-b px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Truck className="h-6 w-6 text-green-600" />
-          <span className="text-lg font-bold">LogitrustKenya</span>
-        </Link>
-        {isMobile && (
-          <Button variant="ghost" size="icon" className="ml-auto" onClick={toggleSidebar}>
-            <X className="h-5 w-5" />
-          </Button>
-        )}
-      </div>
-      <div className="flex-1 overflow-auto py-2">
-        <nav className="grid items-start px-2 text-sm font-medium">
-          {sidebarItems.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground",
-                pathname === item.href
-                  ? "bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-700"
-                  : "hover:bg-muted",
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      </div>
-    </>
-  )
-
   return (
     <>
-      {isMobile && (
-        <Button variant="outline" size="icon" className="fixed left-4 top-4 z-40 md:hidden" onClick={toggleSidebar}>
-          <Menu className="h-5 w-5" />
-        </Button>
-      )}
       {isMobile ? (
-        <div
-          className={cn(
-            "fixed inset-0 z-30 transform transition-transform duration-300 ease-in-out",
-            isOpen ? "translate-x-0" : "-translate-x-full",
-          )}
-        >
-          <div className="flex h-full w-64 flex-col bg-background">{sidebarContent}</div>
-          <div className="absolute inset-0 bg-black/50" onClick={toggleSidebar} style={{ zIndex: -1 }}></div>
-        </div>
+        <>
+          <button
+            onClick={toggleSidebar}
+            className="fixed top-4 left-4 z-50 bg-background/80 backdrop-blur-xl text-white p-2 rounded-md md:hidden"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+          <aside
+            className={`fixed top-0 left-0 h-full w-64 bg-background/95 backdrop-blur-xl z-40 transform transition-transform duration-300 ease-in-out md:hidden ${
+              isOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="flex flex-col h-full p-4">
+              <Link href="/" className="flex items-center space-x-2 mb-6">
+                <div className="relative">
+                  <Truck className="h-7 w-7 text-[#add64e]" />
+                  <div className="absolute -top-1 -right-1 h-3 w-3 bg-[#add64e] rounded-full animate-pulse"></div>
+                </div>
+                <span className="text-lg font-bold text-white">LogitrustKenya</span>
+              </Link>
+              <nav className="flex-1">
+                <ul className="space-y-2">
+                  {menuItems.map((item) => (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className={`flex items-center space-x-3 p-3 rounded-md hover:bg-white/5 transition-colors ${
+                          pathname === item.href ? "bg-white/10 text-[#add64e]" : "text-white/70"
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </aside>
+        </>
       ) : (
-        <div className={cn("hidden border-r bg-background md:flex md:w-64 md:flex-col", className)}>
-          {sidebarContent}
-        </div>
+        <aside className="hidden md:block w-64 flex-shrink-0 border-r border-white/10">
+          <div className="flex flex-col h-full p-4">
+            <Link href="/" className="flex items-center space-x-2 mb-6">
+              <div className="relative">
+                <Truck className="h-7 w-7 text-[#add64e]" />
+                <div className="absolute -top-1 -right-1 h-3 w-3 bg-[#add64e] rounded-full animate-pulse"></div>
+              </div>
+              <span className="text-lg font-bold text-white">LogitrustKenya</span>
+            </Link>
+            <nav className="flex-1">
+              <ul className="space-y-2">
+                {menuItems.map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className={`flex items-center space-x-3 p-3 rounded-md hover:bg-white/5 transition-colors ${
+                        pathname === item.href ? "bg-white/10 text-[#add64e]" : "text-white/70"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </aside>
       )}
     </>
   )
 }
+
+type MenuProps = {
+  className?: string
+}
+
+const Menu = ({ className }: MenuProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+)
 

@@ -6,355 +6,380 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, Package, Truck, CreditCard, Users, BarChart3, ArrowRight, Leaf } from "lucide-react"
+import { ArrowUpRight, Package, CreditCard, Users, BarChart3, Leaf, TrendingUp, MapPin } from "lucide-react"
 import Link from "next/link"
 import { ShipmentCard } from "@/components/shipment-card"
-import { RecentActivity } from "@/components/recent-activity"
-import { QuoteRequestCard } from "@/components/quote-request-card"
 
-export default function SMEDashboardPage() {
+export default function SMEDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
 
-  // Mock data
+  // Mock data for SME
   const stats = [
     {
       title: "Active Shipments",
-      value: "12",
-      description: "3 pending delivery",
+      value: "24",
+      description: "8 pending pickup",
       icon: Package,
-      change: "+2 from last week",
+      change: "+12% from last month",
       positive: true,
     },
     {
-      title: "Completed Deliveries",
-      value: "124",
-      description: "This month",
-      icon: Truck,
-      change: "+15% from last month",
-      positive: true,
-    },
-    {
-      title: "Total Spent",
-      value: "KSh 45,231",
-      description: "This month",
+      title: "Monthly Spend",
+      value: "KSh 127,450",
+      description: "Logistics costs",
       icon: CreditCard,
-      change: "-5% from last month",
-      positive: false,
+      change: "-8% from last month",
+      positive: true,
+    },
+    {
+      title: "Delivery Success Rate",
+      value: "96.8%",
+      description: "On-time deliveries",
+      icon: TrendingUp,
+      change: "+2.1% improvement",
+      positive: true,
     },
     {
       title: "Trusted Providers",
-      value: "8",
-      description: "Out of 15 used",
+      value: "12",
+      description: "Active partnerships",
       icon: Users,
-      change: "+2 new providers",
+      change: "+3 new this month",
       positive: true,
     },
   ]
 
-  const shipments = [
+  const recentShipments = [
     {
-      id: "SHP-1234",
-      origin: "Nairobi CBD",
-      destination: "Mombasa",
+      id: "SHP-2024-001",
+      origin: "Nairobi Industrial Area",
+      destination: "Mombasa Port",
       status: "in-transit",
-      provider: "FastTruck Logistics",
-      date: "Apr 2, 2025",
-      items: "Office Supplies",
-      progress: 65,
+      provider: "Kenya Express Logistics",
+      date: "Dec 30, 2024",
+      items: "Manufacturing Equipment",
+      progress: 75,
+      value: "KSh 15,200",
     },
     {
-      id: "SHP-1235",
-      origin: "Kisumu",
-      destination: "Nakuru",
+      id: "SHP-2024-002",
+      origin: "Kisumu Warehouse",
+      destination: "Nakuru Distribution Center",
       status: "pending",
       provider: "Pending Assignment",
-      date: "Apr 3, 2025",
-      items: "Electronics",
-      progress: 10,
+      date: "Dec 31, 2024",
+      items: "Agricultural Products",
+      progress: 5,
+      value: "KSh 8,500",
     },
     {
-      id: "SHP-1236",
-      origin: "Nairobi Westlands",
-      destination: "Eldoret",
+      id: "SHP-2024-003",
+      origin: "Eldoret Factory",
+      destination: "Nairobi CBD",
       status: "delivered",
-      provider: "Kenya Express",
-      date: "Apr 1, 2025",
-      items: "Furniture",
+      provider: "Swift Cargo",
+      date: "Dec 29, 2024",
+      items: "Textile Products",
       progress: 100,
+      value: "KSh 12,300",
     },
   ]
 
-  const quoteRequests = [
-    {
-      id: "QR-1234",
-      origin: "Nairobi",
-      destination: "Mombasa",
-      packageType: "Electronics",
-      weight: "15 kg",
-      date: "Apr 3, 2025",
-      quotes: 3,
-      status: "pending",
-    },
-    {
-      id: "QR-1235",
-      origin: "Kisumu",
-      destination: "Nakuru",
-      packageType: "Furniture",
-      weight: "50 kg",
-      date: "Apr 2, 2025",
-      quotes: 2,
-      status: "pending",
-    },
+  const costAnalysis = [
+    { category: "Road Transport", amount: 85600, percentage: 67 },
+    { category: "Air Freight", amount: 28400, percentage: 22 },
+    { category: "Rail Transport", amount: 9200, percentage: 7 },
+    { category: "Storage & Handling", amount: 4250, percentage: 4 },
   ]
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">SME Dashboard</h1>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <ArrowUpRight className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-          <Link href="/shipments/create">
-            <Button size="sm" className="bg-green-600 hover:bg-green-700">
-              <Package className="mr-2 h-4 w-4" />
-              New Shipment
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-[#add64e]/5 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+              SME Dashboard
+            </h1>
+            <p className="text-white/70 mt-2">Manage your business logistics operations</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5 bg-transparent">
+              <ArrowUpRight className="mr-2 h-4 w-4" />
+              Export Report
             </Button>
-          </Link>
+            <Link href="/shipments/create">
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
+              >
+                <Package className="mr-2 h-4 w-4" />
+                New Shipment
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
 
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="shipments">Shipments</TabsTrigger>
-          <TabsTrigger value="quotes">Quotes</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, i) => (
-              <Card key={i}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger
+              value="shipments"
+              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
+            >
+              Shipments
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
+            >
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger
+              value="providers"
+              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
+            >
+              Providers
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            {/* Stats Cards */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {stats.map((stat, i) => (
+                <Card
+                  key={i}
+                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
+                >
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-white">{stat.title}</CardTitle>
+                    <stat.icon className="h-4 w-4 text-[#add64e]" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-white">{stat.value}</div>
+                    <p className="text-xs text-white/70">{stat.description}</p>
+                    <div className="mt-2 flex items-center text-xs">
+                      <Badge
+                        variant={stat.positive ? "default" : "destructive"}
+                        className={stat.positive ? "bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30" : ""}
+                      >
+                        {stat.change}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Recent Shipments */}
+              <Card className="lg:col-span-2 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Recent Shipments</CardTitle>
+                  <CardDescription className="text-white/70">Your latest logistics operations</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
-                  <div className="mt-2 flex items-center text-xs">
-                    <Badge
-                      variant={stat.positive ? "default" : "destructive"}
-                      className={stat.positive ? "bg-green-500" : ""}
-                    >
-                      {stat.change}
-                    </Badge>
+                  <div className="space-y-4">
+                    {recentShipments.map((shipment) => (
+                      <div
+                        key={shipment.id}
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0">
+                            <Package className="h-5 w-5 text-[#add64e]" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center space-x-2">
+                              <p className="text-sm font-medium text-white">{shipment.id}</p>
+                              <Badge
+                                className={
+                                  shipment.status === "delivered"
+                                    ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                    : shipment.status === "in-transit"
+                                      ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                      : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                                }
+                              >
+                                {shipment.status.replace("-", " ")}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center space-x-1 text-sm text-white/70">
+                              <span>{shipment.origin}</span>
+                              <span>→</span>
+                              <span>{shipment.destination}</span>
+                            </div>
+                            <p className="text-xs text-white/50">
+                              {shipment.items} • {shipment.provider}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-white">{shipment.value}</p>
+                          <p className="text-xs text-white/70">{shipment.date}</p>
+                          <div className="w-20 mt-1">
+                            <Progress value={shipment.progress} className="h-1" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
+
+              {/* Cost Breakdown */}
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Cost Breakdown</CardTitle>
+                  <CardDescription className="text-white/70">Monthly logistics expenses</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {costAnalysis.map((item, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-white/70">{item.category}</span>
+                          <span className="text-white font-medium">KSh {item.amount.toLocaleString()}</span>
+                        </div>
+                        <Progress value={item.percentage} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Environmental Impact */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Leaf className="h-5 w-5 text-[#add64e]" />
+                    Carbon Footprint
+                  </CardTitle>
+                  <CardDescription className="text-white/70">Environmental impact tracking</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-2xl font-bold text-white">342 kg CO₂</p>
+                        <p className="text-sm text-white/70">This month</p>
+                      </div>
+                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">-15% reduction</Badge>
+                    </div>
+                    <Progress value={68} className="h-2" />
+                    <p className="text-xs text-white/70">68% of monthly target (500 kg CO₂)</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Performance Metrics</CardTitle>
+                  <CardDescription className="text-white/70">Key operational indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">2.1</p>
+                      <p className="text-xs text-white/70">Avg. Days</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">96.8%</p>
+                      <p className="text-xs text-white/70">Success Rate</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">4.8</p>
+                      <p className="text-xs text-white/70">Avg. Rating</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">KSh 2,340</p>
+                      <p className="text-xs text-white/70">Avg. Cost</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="shipments" className="space-y-6">
+            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
               <CardHeader>
-                <CardTitle>Recent Shipments</CardTitle>
-                <CardDescription>Your recent and upcoming shipments</CardDescription>
+                <CardTitle className="text-white">All Shipments</CardTitle>
+                <CardDescription className="text-white/70">Manage your business shipments</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {shipments.map((shipment) => (
+                  {recentShipments.map((shipment) => (
                     <ShipmentCard key={shipment.id} shipment={shipment} />
                   ))}
-                  <div className="flex justify-center mt-4">
-                    <Link href="/shipments">
-                      <Button variant="outline" className="w-full">
-                        View all shipments
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="col-span-3">
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Monthly Trends</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
+                    <BarChart3 className="h-16 w-16 text-[#add64e]/50" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Route Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
+                    <MapPin className="h-16 w-16 text-[#add64e]/50" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="providers" className="space-y-6">
+            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest updates and notifications</CardDescription>
+                <CardTitle className="text-white">Trusted Providers</CardTitle>
+                <CardDescription className="text-white/70">Your logistics partners</CardDescription>
               </CardHeader>
               <CardContent>
-                <RecentActivity />
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Carbon Footprint</CardTitle>
-                <CardDescription>Track your environmental impact</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Monthly Carbon Emissions</p>
-                      <p className="text-2xl font-bold">245 kg CO₂</p>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {[
+                    { name: "Kenya Express Logistics", rating: 4.8, shipments: 45, cost: "KSh 2,100" },
+                    { name: "Swift Cargo", rating: 4.6, shipments: 32, cost: "KSh 1,950" },
+                    { name: "Reliable Transport Co.", rating: 4.7, shipments: 28, cost: "KSh 2,250" },
+                  ].map((provider, index) => (
+                    <div key={index} className="p-4 bg-white/5 rounded-lg border border-white/10">
+                      <h3 className="font-medium text-white">{provider.name}</h3>
+                      <div className="mt-2 space-y-1 text-sm text-white/70">
+                        <p>Rating: {provider.rating}/5.0</p>
+                        <p>Shipments: {provider.shipments}</p>
+                        <p>Avg. Cost: {provider.cost}</p>
+                      </div>
                     </div>
-                    <Badge className="bg-green-100 text-green-800">-12% from last month</Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <div>Current</div>
-                      <div>245 kg of 300 kg target</div>
-                    </div>
-                    <Progress value={82} className="h-2 bg-gray-200" />
-                  </div>
-                  <div className="pt-4 grid grid-cols-3 gap-4 text-center text-sm">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Road</p>
-                      <p className="font-medium mt-1">180 kg</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Rail</p>
-                      <p className="font-medium mt-1">45 kg</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Air</p>
-                      <p className="font-medium mt-1">20 kg</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
-            <Card className="col-span-3">
-              <CardHeader>
-                <CardTitle>Delivery Performance</CardTitle>
-                <CardDescription>On-time delivery metrics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">On-time Delivery Rate</p>
-                      <p className="text-2xl font-bold">92%</p>
-                    </div>
-                    <Badge className="bg-green-100 text-green-800">+3% from last month</Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <div>Target: 95%</div>
-                    </div>
-                    <Progress value={92} className="h-2 bg-gray-200" />
-                  </div>
-                  <div className="pt-4 grid grid-cols-2 gap-4 text-center text-sm">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Avg. Delivery Time</p>
-                      <p className="font-medium mt-1">2.3 days</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Delayed Shipments</p>
-                      <p className="font-medium mt-1">4 of 52</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="shipments" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Shipments</CardTitle>
-              <CardDescription>View and manage all your shipments</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {shipments.map((shipment) => (
-                  <ShipmentCard key={shipment.id} shipment={shipment} />
-                ))}
-                <div className="flex justify-center mt-4">
-                  <Link href="/shipments">
-                    <Button className="w-full bg-green-600 hover:bg-green-700">View All Shipments</Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="quotes" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quote Requests</CardTitle>
-              <CardDescription>View and manage your quote requests</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {quoteRequests.map((quote) => (
-                  <QuoteRequestCard key={quote.id} quote={quote} />
-                ))}
-                <div className="flex justify-center mt-4">
-                  <Link href="/quotes/request">
-                    <Button className="w-full bg-green-600 hover:bg-green-700">Request New Quote</Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="analytics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Logistics Analytics</CardTitle>
-              <CardDescription>Insights into your logistics operations</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Shipment Volume</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-md">
-                      <BarChart3 className="h-16 w-16 text-gray-300" />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Cost Analysis</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-md">
-                      <BarChart3 className="h-16 w-16 text-gray-300" />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Provider Performance</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-md">
-                      <BarChart3 className="h-16 w-16 text-gray-300" />
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Environmental Impact</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-md">
-                      <Leaf className="h-16 w-16 text-gray-300" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   )
 }
+
 

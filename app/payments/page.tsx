@@ -1,306 +1,556 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
 import {
-  Search,
-  Filter,
-  Download,
+  Truck,
+  Package,
   CreditCard,
-  CheckCircle,
+  Star,
+  MapPin,
   Clock,
-  AlertTriangle,
-  ArrowRight,
-  Wallet,
-  FileText,
+  TrendingUp,
+  CheckCircle,
+  AlertCircle,
+  Calendar,
 } from "lucide-react"
-import Link from "next/link"
 
-export default function PaymentsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
+export default function ProviderDashboard() {
+  const [activeTab, setActiveTab] = useState("overview")
 
-  // Mock data
-  const payments = [
+  // Placeholder data for logistics provider
+  const stats = [
     {
-      id: "PAY-1234",
-      shipmentId: "SHP-1236",
-      amount: "KSh 3,500",
-      status: "completed",
-      method: "M-Pesa",
-      reference: "MPESA123456",
-      date: "Apr 1, 2025",
-      provider: "Kenya Express",
-      route: "Nairobi to Eldoret",
+      title: "Total Jobs",
+      value: "--",
+      description: "Jobs completed this month",
+      change: "+-- from last month",
+      icon: Package,
     },
     {
-      id: "PAY-1235",
-      shipmentId: "SHP-1234",
-      amount: "KSh 4,200",
-      status: "pending",
-      method: "Escrow",
-      reference: "ESC789012",
-      date: "Apr 2, 2025",
-      provider: "FastTruck Logistics",
-      route: "Nairobi to Mombasa",
+      title: "Monthly Earnings",
+      value: "KSh --,---",
+      description: "Total earnings this month",
+      change: "+--% from last month",
+      icon: CreditCard,
     },
     {
-      id: "PAY-1236",
-      shipmentId: "SHP-1233",
-      amount: "KSh 2,800",
-      status: "completed",
-      method: "Credit Card",
-      reference: "CC345678",
-      date: "Mar 30, 2025",
-      provider: "Swift Movers",
-      route: "Kisumu to Nakuru",
+      title: "Service Rating",
+      value: "-.--",
+      description: "Average customer rating",
+      change: "+-.-- from last month",
+      icon: Star,
     },
     {
-      id: "PAY-1237",
-      shipmentId: "SHP-1232",
-      amount: "KSh 1,500",
-      status: "failed",
-      method: "M-Pesa",
-      reference: "MPESA901234",
-      date: "Mar 29, 2025",
-      provider: "Nairobi Couriers",
-      route: "Nairobi to Thika",
-    },
-    {
-      id: "PAY-1238",
-      shipmentId: "SHP-1231",
-      amount: "KSh 5,100",
-      status: "completed",
-      method: "Wallet",
-      reference: "WAL567890",
-      date: "Mar 28, 2025",
-      provider: "Highlands Transport",
-      route: "Nakuru to Nairobi",
-    },
-    {
-      id: "PAY-1239",
-      shipmentId: "SHP-1230",
-      amount: "KSh 3,200",
-      status: "pending",
-      method: "Escrow",
-      reference: "ESC123789",
-      date: "Mar 27, 2025",
-      provider: "Green Logistics",
-      route: "Nairobi to Machakos",
+      title: "Distance Covered",
+      value: "--- km",
+      description: "Total distance this month",
+      change: "+--- km from last month",
+      icon: Truck,
     },
   ]
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <Badge variant="outline" className="flex items-center gap-1 text-custom-green border-custom-green bg-custom-green/20">
-            <CheckCircle className="h-3 w-3" />
-            Completed
-          </Badge>
-        )
-      case "pending":
-        return (
-          <Badge variant="outline" className="flex items-center gap-1 text-yellow-600 border-yellow-200 bg-yellow-50">
-            <Clock className="h-3 w-3" />
-            Pending
-          </Badge>
-        )
-      case "failed":
-        return (
-          <Badge variant="outline" className="flex items-center gap-1 text-red-600 border-red-200 bg-red-50">
-            <AlertTriangle className="h-3 w-3" />
-            Failed
-          </Badge>
-        )
-      default:
-        return <Badge variant="outline">{status}</Badge>
+  const activeJobs = [
+    {
+      id: "JOB-XXXX",
+      client: "Client Name",
+      origin: "Origin Location",
+      destination: "Destination Location",
+      distance: "-- km",
+      items: "-- items",
+      deadline: "MMM DD, YYYY",
+      value: "KSh --,---",
+      priority: "normal",
+      status: "pending",
+    },
+    {
+      id: "JOB-YYYY",
+      client: "Another Client",
+      origin: "Start Point",
+      destination: "End Point",
+      distance: "-- km",
+      items: "-- packages",
+      deadline: "MMM DD, YYYY",
+      value: "KSh --,---",
+      priority: "high",
+      status: "in-progress",
+    },
+    {
+      id: "JOB-ZZZZ",
+      client: "Third Client",
+      origin: "Pickup Location",
+      destination: "Delivery Location",
+      distance: "-- km",
+      items: "-- items",
+      deadline: "MMM DD, YYYY",
+      value: "KSh --,---",
+      priority: "urgent",
+      status: "pending",
+    },
+  ]
+
+  const recentCompletions = [
+    {
+      id: "JOB-AAAA",
+      client: "Completed Client A",
+      route: "Location A → Location B",
+      completedDate: "MMM DD, YYYY",
+      value: "KSh --,---",
+      rating: "-.--",
+    },
+    {
+      id: "JOB-BBBB",
+      client: "Completed Client B",
+      route: "Location C → Location D",
+      completedDate: "MMM DD, YYYY",
+      value: "KSh --,---",
+      rating: "-.--",
+    },
+    {
+      id: "JOB-CCCC",
+      client: "Completed Client C",
+      route: "Location E → Location F",
+      completedDate: "MMM DD, YYYY",
+      value: "KSh --,---",
+      rating: "-.--",
+    },
+  ]
+
+  const performanceMetrics = [
+    {
+      label: "On-time Delivery Rate",
+      value: "--%",
+      change: "+--% from last period",
+    },
+    {
+      label: "Customer Satisfaction",
+      value: "-.-- / 5.0",
+      change: "+-.-- from last period",
+    },
+    {
+      label: "Job Completion Rate",
+      value: "--%",
+      change: "+--% from last period",
+    },
+    {
+      label: "Average Response Time",
+      value: "-- minutes",
+      change: "-– minutes from last period",
+    },
+  ]
+
+  const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => (
+    <div className={`rounded-lg ${className}`}>{children}</div>
+  )
+
+  const CardHeader = ({ children }) => (
+    <div className="p-6 pb-4">{children}</div>
+  )
+
+  const CardTitle = ({ children, className = "" }) => (
+    <h3 className={`text-lg font-semibold ${className}`}>{children}</h3>
+  )
+
+  const CardDescription = ({ children, className = "" }) => (
+    <p className={`text-sm mt-1 ${className}`}>{children}</p>
+  )
+
+  const CardContent = ({ children, className = "" }) => (
+    <div className={`p-6 pt-0 ${className}`}>{children}</div>
+  )
+
+  const Button = ({ children, className = "", variant = "default", size = "default", ...props }) => {
+    const baseClasses = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
+    const variants = {
+      default: "bg-blue-600 text-white hover:bg-blue-700",
+      outline: "border hover:bg-gray-100"
     }
+    const sizes = {
+      default: "h-10 py-2 px-4",
+      sm: "h-8 px-3 text-sm"
+    }
+    
+    return (
+      <button 
+        className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
+        {...props}
+      >
+        {children}
+      </button>
+    )
   }
 
-  // Filter payments based on search term and active tab
-  const filteredPayments = payments.filter((payment) => {
-    const matchesSearch =
-      payment.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.shipmentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.route.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.method.toLowerCase().includes(searchTerm.toLowerCase())
+  const Badge = ({ children, className = "" }) => (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${className}`}>
+      {children}
+    </span>
+  )
 
-    if (activeTab === "all") {
-      return matchesSearch
-    } else {
-      return matchesSearch && payment.status === activeTab
-    }
-  })
+  const TabsList = ({ children, className = "" }) => (
+    <div className={`inline-flex h-10 items-center justify-center rounded-md p-1 ${className}`}>
+      {children}
+    </div>
+  )
+
+  const TabsTrigger = ({ children, value, className = "", ...props }) => (
+    <button
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
+        activeTab === value ? 'bg-[#add64e] text-black' : 'text-white/70'
+      } ${className}`}
+      onClick={() => setActiveTab(value)}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+
+  const TabsContent = ({ children, value, className = "" }) => {
+    if (activeTab !== value) return null
+    return <div className={className}>{children}</div>
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Payments</h1>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-          <Link href="/payments/wallet">
-            <Button size="sm" className="bg-custom-green hover:bg-[#9bc943]">
-              <Wallet className="mr-2 h-4 w-4" />
-              Wallet
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-green-900/20 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+              Provider Dashboard
+            </h1>
+            <p className="text-white/70 mt-2">Manage your logistics operations and earnings</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5 bg-transparent">
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule
             </Button>
-          </Link>
+            <Button
+              size="sm"
+              className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
+            >
+              <Package className="mr-2 h-4 w-4" />
+              Browse Jobs
+            </Button>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="jobs">Active Jobs</TabsTrigger>
+            <TabsTrigger value="earnings">Earnings</TabsTrigger>
+            <TabsTrigger value="performance">Performance</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            {/* Stats Cards */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {stats.map((stat, i) => (
+                <Card
+                  key={i}
+                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
+                >
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-white">{stat.title}</CardTitle>
+                    <stat.icon className="h-4 w-4 text-[#add64e]" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-white">{stat.value}</div>
+                    <p className="text-xs text-white/70">{stat.description}</p>
+                    <div className="mt-2 flex items-center text-xs">
+                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">{stat.change}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Active Jobs */}
+              <Card className="lg:col-span-2 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Active Jobs</CardTitle>
+                  <CardDescription className="text-white/70">Your current logistics assignments</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {activeJobs.map((job) => (
+                      <div
+                        key={job.id}
+                        className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-2">
+                            <Truck className="h-4 w-4 text-[#add64e]" />
+                            <span className="text-sm font-medium text-white">{job.id}</span>
+                            <Badge
+                              className={
+                                job.priority === "urgent"
+                                  ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                  : job.priority === "high"
+                                    ? "bg-orange-500/20 text-orange-400 border-orange-500/30"
+                                    : "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                              }
+                            >
+                              {job.priority}
+                            </Badge>
+                          </div>
+                          <span className="text-sm font-medium text-[#add64e]">{job.value}</span>
+                        </div>
+
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-white/70">Client:</span>
+                            <span className="text-white">{job.client}</span>
+                          </div>
+                          <div className="flex items-center space-x-1 text-white/70">
+                            <MapPin className="h-3 w-3" />
+                            <span>
+                              {job.origin} → {job.destination}
+                            </span>
+                            <span className="text-white/50">({job.distance})</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-white/70">Items:</span>
+                            <span className="text-white">{job.items}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-1 text-white/70">
+                              <Clock className="h-3 w-3" />
+                              <span>Due: {job.deadline}</span>
+                            </div>
+                            <Badge
+                              className={
+                                job.status === "in-progress"
+                                  ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                  : job.status === "pending"
+                                    ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                                    : "bg-green-500/20 text-green-400 border-green-500/30"
+                              }
+                            >
+                              {job.status.replace("-", " ")}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 flex gap-2">
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
+                          >
+                            Update Status
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-white/20 text-white hover:bg-white/5 bg-transparent"
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Quick Stats */}
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Today's Summary</CardTitle>
+                  <CardDescription className="text-white/70">Your daily performance</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-400" />
+                      <span className="text-sm text-white">Completed</span>
+                    </div>
+                    <span className="text-sm font-medium text-white">-- jobs</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-400" />
+                      <span className="text-sm text-white">In Progress</span>
+                    </div>
+                    <span className="text-sm font-medium text-white">-- jobs</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <CreditCard className="h-4 w-4 text-[#add64e]" />
+                      <span className="text-sm text-white">Earnings</span>
+                    </div>
+                    <span className="text-sm font-medium text-white">KSh --,---</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <MapPin className="h-4 w-4 text-blue-400" />
+                      <span className="text-sm text-white">Distance</span>
+                    </div>
+                    <span className="text-sm font-medium text-white">--- km</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Completions & Performance */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Recent Completions</CardTitle>
+                  <CardDescription className="text-white/70">Your latest successful deliveries</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentCompletions.map((completion) => (
+                      <div key={completion.id} className="p-3 bg-white/5 rounded-lg border border-white/10">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-white">{completion.id}</span>
+                          <span className="text-sm font-medium text-[#add64e]">{completion.value}</span>
+                        </div>
+                        <div className="space-y-1 text-xs text-white/70">
+                          <p>Client: {completion.client}</p>
+                          <p>Route: {completion.route}</p>
+                          <p>Completed: {completion.completedDate}</p>
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 fill-current text-yellow-400" />
+                            <span>{completion.rating}/5.0</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Performance Metrics</CardTitle>
+                  <CardDescription className="text-white/70">Key performance indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {performanceMetrics.map((metric, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-white/70">{metric.label}</span>
+                          <span className="text-white font-medium">{metric.value}</span>
+                        </div>
+                        <div className="text-xs text-[#add64e]">{metric.change}</div>
+                        {index < performanceMetrics.length - 1 && <div className="border-t border-white/10 pt-2" />}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="jobs" className="space-y-6">
+            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">All Active Jobs</CardTitle>
+                <CardDescription className="text-white/70">Manage your current assignments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {activeJobs.map((job) => (
+                    <div key={job.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <Truck className="h-5 w-5 text-[#add64e]" />
+                          <div>
+                            <p className="text-sm font-medium text-white">{job.id}</p>
+                            <p className="text-xs text-white/70">{job.client}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-[#add64e]">{job.value}</p>
+                          <Badge
+                            className={
+                              job.status === "in-progress"
+                                ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                : job.status === "pending"
+                                  ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                                  : "bg-green-500/20 text-green-400 border-green-500/30"
+                            }
+                          >
+                            {job.status.replace("-", " ")}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="earnings" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-3">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">This Month</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">KSh ---,---</div>
+                  <p className="text-xs text-white/70">+--% from last month</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">This Week</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">KSh --,---</div>
+                  <p className="text-xs text-white/70">+--% from last week</p>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Today</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">KSh --,---</div>
+                  <p className="text-xs text-white/70">-- jobs completed</p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="performance" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Service Rating Trend</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
+                    <div className="text-center text-white/50">
+                      <Star className="h-16 w-16 mx-auto mb-2 text-[#add64e]/50" />
+                      <p className="text-sm">Chart placeholder</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Completion Rate</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
+                    <div className="text-center text-white/50">
+                      <TrendingUp className="h-16 w-16 mx-auto mb-2 text-[#add64e]/50" />
+                      <p className="text-sm">Chart placeholder</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
         </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment History</CardTitle>
-          <CardDescription>View and manage all your payment transactions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex w-full items-center gap-2 md:w-2/3">
-                <div className="relative w-full">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search payments..."
-                    className="w-full appearance-none pl-8"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Button variant="outline" size="icon">
-                  <Filter className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="completed">Completed</TabsTrigger>
-                <TabsTrigger value="pending">Pending</TabsTrigger>
-                <TabsTrigger value="failed">Failed</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <div className="rounded-md border">
-              <div className="grid grid-cols-6 gap-4 p-4 font-medium border-b">
-                <div className="col-span-2">Payment Details</div>
-                <div className="hidden md:block">Amount</div>
-                <div className="hidden md:block">Date</div>
-                <div className="hidden md:block">Status</div>
-                <div className="text-right">Actions</div>
-              </div>
-              {filteredPayments.map((payment) => (
-                <div
-                  key={payment.id}
-                  className="grid grid-cols-6 gap-4 p-4 border-b hover:bg-gray-50 transition-colors"
-                >
-                  <div className="col-span-2">
-                    <div className="font-medium">{payment.id}</div>
-                    <div className="text-sm text-muted-foreground">
-                      <Link href={`/shipments/${payment.shipmentId}`} className="hover:underline">
-                        {payment.shipmentId}
-                      </Link>
-                      {" • "}
-                      {payment.provider}
-                    </div>
-                    <div className="text-xs text-muted-foreground md:hidden mt-1">
-                      {payment.amount} • {payment.date}
-                    </div>
-                    <div className="md:hidden mt-1">{getStatusBadge(payment.status)}</div>
-                  </div>
-                  <div className="hidden md:block self-center">{payment.amount}</div>
-                  <div className="hidden md:block self-center text-sm">{payment.date}</div>
-                  <div className="hidden md:flex md:items-center">{getStatusBadge(payment.status)}</div>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                      <FileText className="h-4 w-4" />
-                      <span className="sr-only">View Receipt</span>
-                    </Button>
-                    <Link href={`/payments/${payment.id}`}>
-                      <Button variant="outline" size="sm" className="h-8">
-                        Details
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-              {filteredPayments.length === 0 && (
-                <div className="p-4 text-center text-muted-foreground">No payments found matching your criteria.</div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment Methods</CardTitle>
-          <CardDescription>Manage your payment methods</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-custom-green/20 flex items-center justify-center">
-                  <CreditCard className="h-5 w-5 text-custom-green" />
-                </div>
-                <div>
-                  <h3 className="font-medium">M-Pesa</h3>
-                  <p className="text-sm text-muted-foreground">Connected • Primary</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">
-                Manage
-              </Button>
-            </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Wallet className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">Wallet</h3>
-                  <p className="text-sm text-muted-foreground">Balance: KSh 12,500</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">
-                Top Up
-              </Button>
-            </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-                  <CreditCard className="h-5 w-5 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">Credit Card</h3>
-                  <p className="text-sm text-muted-foreground">Not connected</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">
-                Connect
-              </Button>
-            </div>
-            <div className="mt-4">
-            <Button className="w-full bg-custom-green hover:bg-[#9bc943]">
-              <CreditCard className="mr-2 h-4 w-4" />
-              Add Payment Method
-            </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
-
