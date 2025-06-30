@@ -92,12 +92,12 @@ export default function DashboardPage() {
             <ArrowUpRight className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Link href="/shipments/create">
-            <Button size="sm" className="bg-green-600 hover:bg-green-700">
-              <Package className="mr-2 h-4 w-4" />
-              New Shipment
-            </Button>
-          </Link>
+            <Link href="/shipments/create">
+              <Button size="sm" className="bg-custom-green hover:bg-[#9bc943]">
+                <Package className="mr-2 h-4 w-4" />
+                New Shipment
+              </Button>
+            </Link>
         </div>
       </div>
 
@@ -120,12 +120,12 @@ export default function DashboardPage() {
                   <div className="text-2xl font-bold">{stat.value}</div>
                   <p className="text-xs text-muted-foreground">{stat.description}</p>
                   <div className="mt-2 flex items-center text-xs">
-                    <Badge
-                      variant={stat.positive ? "default" : "destructive"}
-                      className={stat.positive ? "bg-green-500" : ""}
-                    >
-                      {stat.change}
-                    </Badge>
+                      <Badge
+                        variant={stat.positive ? "default" : "destructive"}
+                        className={stat.positive ? "bg-custom-green" : ""}
+                      >
+                        {stat.change}
+                      </Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -163,46 +163,8 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader>
-                <CardTitle>Carbon Footprint</CardTitle>
-                <CardDescription>Track your environmental impact</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Monthly Carbon Emissions</p>
-                      <p className="text-2xl font-bold">245 kg CO₂</p>
-                    </div>
-                    <Badge className="bg-green-100 text-green-800">-12% from last month</Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <div>Current</div>
-                      <div>245 kg of 300 kg target</div>
-                    </div>
-                    <Progress value={82} className="h-2 bg-gray-200" />
-                  </div>
-                  <div className="pt-4 grid grid-cols-3 gap-4 text-center text-sm">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Road</p>
-                      <p className="font-medium mt-1">180 kg</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Rail</p>
-                      <p className="font-medium mt-1">45 kg</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-muted-foreground">Air</p>
-                      <p className="font-medium mt-1">20 kg</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="col-span-3">
+          <div className="grid gap-4 md:grid-cols-1">
+            <Card>
               <CardHeader>
                 <CardTitle>Delivery Performance</CardTitle>
                 <CardDescription>On-time delivery metrics</CardDescription>
@@ -214,7 +176,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-medium">On-time Delivery Rate</p>
                       <p className="text-2xl font-bold">92%</p>
                     </div>
-                    <Badge className="bg-green-100 text-green-800">+3% from last month</Badge>
+                  <Badge className="bg-custom-green/20 text-custom-green">+3% from last month</Badge>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
@@ -286,4 +248,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

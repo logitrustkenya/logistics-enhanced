@@ -37,30 +37,30 @@ export default function ProfilePage() {
               <div className="text-center">
                 <h2 className="text-xl font-bold">John Doe</h2>
                 <p className="text-sm text-muted-foreground">john@example.com</p>
-                <Badge className="mt-2 bg-green-100 text-green-800 hover:bg-green-100">SME</Badge>
+                <Badge className="mt-2 bg-custom-green/20 text-custom-green hover:bg-custom-green/20">SME</Badge>
               </div>
-              <Button className="w-full bg-green-600 hover:bg-green-700">Change Avatar</Button>
+              <Button className="w-full bg-custom-green hover:bg-[#9bc943]">Change Avatar</Button>
             </div>
 
             <div className="mt-6 space-y-1">
-              <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveTab("profile")}>
-                <User className="mr-2 h-4 w-4" />
+              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("profile")}>
+                <User className="mr-2 h-4 w-4 text-custom-green" />
                 Personal Information
               </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveTab("business")}>
-                <Building className="mr-2 h-4 w-4" />
+              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("business")}>
+                <Building className="mr-2 h-4 w-4 text-custom-green" />
                 Business Details
               </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveTab("notifications")}>
-                <Bell className="mr-2 h-4 w-4" />
+              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("notifications")}>
+                <Bell className="mr-2 h-4 w-4 text-custom-green" />
                 Notifications
               </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveTab("security")}>
-                <Shield className="mr-2 h-4 w-4" />
+              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("security")}>
+                <Shield className="mr-2 h-4 w-4 text-custom-green" />
                 Security
               </Button>
-              <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveTab("payment")}>
-                <CreditCard className="mr-2 h-4 w-4" />
+              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("payment")}>
+                <CreditCard className="mr-2 h-4 w-4 text-custom-green" />
                 Payment Methods
               </Button>
             </div>
@@ -126,7 +126,7 @@ export default function ProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Save Changes</Button>
+                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Changes</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                     <Label htmlFor="website">Website</Label>
                     <Input id="website" defaultValue="https://www.acmeinc.co.ke" />
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Save Changes</Button>
+                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Changes</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -297,7 +297,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Save Preferences</Button>
+                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Preferences</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -338,7 +338,7 @@ export default function ProfilePage() {
                       <Switch id="login-notifications" defaultChecked />
                     </div>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Update Security Settings</Button>
+                  <Button className="bg-custom-green hover:bg-[#9bc943]">Update Security Settings</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -352,8 +352,8 @@ export default function ProfilePage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <CreditCard className="h-5 w-5 text-green-600" />
+                        <div className="h-10 w-10 rounded-full bg-custom-green/20 flex items-center justify-center">
+                          <CreditCard className="h-5 w-5 text-custom-green" />
                         </div>
                         <div>
                           <h3 className="font-medium">M-Pesa</h3>
@@ -379,7 +379,7 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Add Payment Method</Button>
+                  <Button className="bg-custom-green hover:bg-[#9bc943]">Add Payment Method</Button>
                 </CardContent>
               </Card>
             </TabsContent>

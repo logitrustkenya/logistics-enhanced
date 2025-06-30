@@ -131,14 +131,14 @@ export default function ProvidersPage() {
               <div className="flex gap-2">
                 <Button
                   variant={filterType === "all" ? "default" : "outline"}
-                  className={filterType === "all" ? "bg-green-600 hover:bg-green-700" : ""}
+                  className={filterType === "all" ? "bg-custom-green hover:bg-[#9bc943]" : ""}
                   onClick={() => setFilterType("all")}
                 >
                   All Providers
                 </Button>
                 <Button
                   variant={filterType === "eco" ? "default" : "outline"}
-                  className={filterType === "eco" ? "bg-green-600 hover:bg-green-700" : ""}
+                  className={filterType === "eco" ? "bg-custom-green hover:bg-[#9bc943]" : ""}
                   onClick={() => setFilterType("eco")}
                 >
                   <Leaf className="mr-2 h-4 w-4" />
@@ -182,7 +182,7 @@ export default function ProvidersPage() {
                           </Badge>
                         ))}
                         {provider.ecoFriendly && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          <Badge variant="outline" className="bg-custom-green/20 text-custom-green border-custom-green">
                             <Leaf className="mr-1 h-3 w-3" />
                             Eco-Friendly
                           </Badge>
@@ -196,7 +196,7 @@ export default function ProvidersPage() {
                       </Button>
                       <Link
                         href={`/providers/${provider.id}`}
-                        className="text-sm text-green-600 hover:text-green-700 flex items-center"
+                        className="text-sm text-custom-green hover:text-[#9bc943] flex items-center"
                       >
                         View Profile
                         <ArrowRight className="ml-1 h-4 w-4" />

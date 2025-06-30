@@ -98,10 +98,10 @@ export default function ShipmentsPage() {
         )
       case "delivered":
         return (
-          <Badge variant="outline" className="flex items-center gap-1 text-green-600 border-green-200 bg-green-50">
-            <CheckCircle className="h-3 w-3" />
-            Delivered
-          </Badge>
+                    <Badge variant="outline" className="flex items-center gap-1 text-custom-green border-custom-green bg-custom-green/20">
+                      <CheckCircle className="h-3 w-3" />
+                      Delivered
+                    </Badge>
         )
       default:
         return <Badge variant="outline">{status}</Badge>
@@ -138,12 +138,12 @@ export default function ShipmentsPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Shipments</h1>
-        <Link href="/shipments/create">
-          <Button className="bg-green-600 hover:bg-green-700">
-            <Package className="mr-2 h-4 w-4" />
-            New Shipment
-          </Button>
-        </Link>
+          <Link href="/shipments/create">
+            <Button className="bg-custom-green hover:bg-[#9bc943]">
+              <Package className="mr-2 h-4 w-4" />
+              New Shipment
+            </Button>
+          </Link>
       </div>
 
       <Card>
@@ -235,7 +235,7 @@ export default function ShipmentsPage() {
                   <div className="mt-4 flex justify-end">
                     <Link
                       href={`/shipments/${shipment.id}`}
-                      className="text-sm text-green-600 hover:text-green-700 flex items-center"
+                      className="text-sm text-custom-green hover:text-[#9bc943] flex items-center"
                     >
                       View details
                       <ArrowRight className="ml-1 h-4 w-4" />
