@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge"
-import { FileText, ArrowRight, Package, MapPin } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { MapPin, Package, Clock } from "lucide-react"
 
-interface QuoteRequestProps {
+interface QuoteRequestCardProps {
   quote: {
     id: string
     origin: string
@@ -15,80 +15,44 @@ interface QuoteRequestProps {
   }
 }
 
-export function QuoteRequestCard({ quote }: QuoteRequestProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return (
-          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            Pending Quotes
-          </Badge>
-        )
-      case "received":
-        return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-            Quotes Received
-          </Badge>
-        )
-      case "accepted":
-        return (
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            Quote Accepted
-          </Badge>
-        )
-      default:
-        return <Badge variant="outline">{status}</Badge>
-    }
-  }
-
+export function QuoteRequestCard({ quote }: QuoteRequestCardProps) {
   return (
-    <div className="rounded-lg border p-4 hover:bg-gray-50 transition-colors">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-gray-500" />
-          <Link href={`/quotes/${quote.id}`} className="font-medium hover:underline">
-            {quote.id}
-          </Link>
-          {getStatusBadge(quote.status)}
+    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+      <div className="flex items-center space-x-4">
+        <div className="flex-shrink-0">
+          <Package className="h-5 w-5 text-gray-400" />
         </div>
-        <div className="text-sm text-muted-foreground">{quote.date}</div>
-      </div>
-      <div className="mt-2 grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-sm font-medium flex items-center gap-1">
-            <MapPin className="h-3 w-3" /> From
-          </p>
-          <p className="text-sm text-muted-foreground">{quote.origin}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium flex items-center gap-1">
-            <MapPin className="h-3 w-3" /> To
-          </p>
-          <p className="text-sm text-muted-foreground">{quote.destination}</p>
-        </div>
-      </div>
-      <div className="mt-2 grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-sm font-medium flex items-center gap-1">
-            <Package className="h-3 w-3" /> Package Type
-          </p>
-          <p className="text-sm text-muted-foreground">{quote.packageType}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium">Weight</p>
-          <p className="text-sm text-muted-foreground">{quote.weight}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center space-x-2">
+            <p className="text-sm font-medium text-gray-900">{quote.id}</p>
+            <Badge variant="outline">{quote.status}</Badge>
+          </div>
+          <div className="flex items-center space-x-1 text-sm text-gray-500">
+            <MapPin className="h-3 w-3" />
+            <span>{quote.origin}</span>
+            <span>→</span>
+            <span>{quote.destination}</span>
+          </div>
+          <div className="flex items-center space-x-4 text-xs text-gray-400 mt-1">
+            <span>{quote.packageType}</span>
+            <span>{quote.weight}</span>
+            <div className="flex items-center space-x-1">
+              <Clock className="h-3 w-3" />
+              <span>{quote.date}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center justify-between">
-        <div className="text-sm">
-          <span className="font-medium">{quote.quotes}</span> quotes received
+      <div className="flex items-center space-x-4">
+        <div className="text-right">
+          <p className="text-sm font-medium text-gray-900">{quote.quotes} quotes</p>
+          <Button size="sm" variant="outline" className="mt-2 bg-transparent">
+            View Quotes
+          </Button>
         </div>
-        <Link href={`/quotes/${quote.id}`} className="text-sm text-green-600 hover:text-green-700 flex items-center">
-          View quotes
-          <ArrowRight className="ml-1 h-4 w-4" />
-        </Link>
       </div>
     </div>
   )
 }
+
 

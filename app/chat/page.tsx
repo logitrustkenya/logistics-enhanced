@@ -18,125 +18,24 @@ export default function ChatPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Mock data
-  const chats = [
-    {
-      id: "chat-1",
-      name: "FastTruck Logistics",
-      avatar: "/placeholder.svg",
-      status: "online",
-      unread: 0,
-      lastMessage: "We'll make sure to handle your package with care.",
-      lastMessageTime: "10:45 AM",
-      messages: [
-        {
-          id: 1,
-          sender: "FastTruck Logistics",
-          content: "Hello! We've received your shipment request for delivery from Nairobi to Mombasa.",
-          time: "10:30 AM",
-          isUser: false,
-        },
-        {
-          id: 2,
-          sender: "You",
-          content: "Great! When can I expect the pickup?",
-          time: "10:32 AM",
-          isUser: true,
-        },
-        {
-          id: 3,
-          sender: "FastTruck Logistics",
-          content: "We can schedule the pickup for tomorrow between 9 AM and 12 PM. Does that work for you?",
-          time: "10:35 AM",
-          isUser: false,
-        },
-        {
-          id: 4,
-          sender: "You",
-          content: "Yes, that works perfectly. The package contains electronics, so please handle with care.",
-          time: "10:40 AM",
-          isUser: true,
-        },
-        {
-          id: 5,
-          sender: "FastTruck Logistics",
-          content: "We'll make sure to handle your package with care. Our driver will call you before arriving.",
-          time: "10:45 AM",
-          isUser: false,
-        },
-      ],
-    },
-    {
-      id: "chat-2",
-      name: "Kenya Express",
-      avatar: "/placeholder.svg",
-      status: "offline",
-      unread: 2,
-      lastMessage: "Your shipment has been delivered successfully.",
-      lastMessageTime: "Yesterday",
-      messages: [
-        {
-          id: 1,
-          sender: "Kenya Express",
-          content: "Your shipment SHP-1236 is out for delivery today.",
-          time: "Yesterday, 2:30 PM",
-          isUser: false,
-        },
-        {
-          id: 2,
-          sender: "You",
-          content: "Thank you for the update. What's the estimated delivery time?",
-          time: "Yesterday, 2:35 PM",
-          isUser: true,
-        },
-        {
-          id: 3,
-          sender: "Kenya Express",
-          content: "The driver estimates arrival between 4 PM and 6 PM today.",
-          time: "Yesterday, 2:40 PM",
-          isUser: false,
-        },
-        {
-          id: 4,
-          sender: "Kenya Express",
-          content: "Your shipment has been delivered successfully. Thank you for choosing Kenya Express!",
-          time: "Yesterday, 5:15 PM",
-          isUser: false,
-        },
-      ],
-    },
-    {
-      id: "chat-3",
-      name: "Swift Movers",
-      avatar: "/placeholder.svg",
-      status: "online",
-      unread: 1,
-      lastMessage: "We've received your quote request. We'll get back to you shortly.",
-      lastMessageTime: "Apr 1",
-      messages: [
-        {
-          id: 1,
-          sender: "You",
-          content: "Hello, I'd like to request a quote for shipping furniture from Kisumu to Nakuru.",
-          time: "Apr 1, 9:15 AM",
-          isUser: true,
-        },
-        {
-          id: 2,
-          sender: "Swift Movers",
-          content: "We've received your quote request. We'll get back to you shortly.",
-          time: "Apr 1, 9:30 AM",
-          isUser: false,
-        },
-      ],
-    },
-  ]
+  // Define a type for message objects
+  type Message = {
+    id: string
+    sender: string
+    content: string
+    time: string
+    isUser: boolean
+  }
 
-  const activeMessages = chats.find((chat) => chat.id === activeChat)?.messages || []
+  // Placeholder for chats data
+  const chats: any[] = []
+
+  const activeMessages: Message[] = chats.find((chat) => chat.id === activeChat)?.messages || []
 
   const handleSendMessage = () => {
     if (message.trim() || attachments.length > 0) {
-      // In a real app, this would send the message to the backend
+      // hapa ndio,  would send the message to the backend
+      // bevon console.log("Sending message:", message)
       console.log("Sending message:", message, attachments)
       setMessage("")
       setAttachments([])
@@ -235,17 +134,7 @@ export default function ChatPage() {
                     />
                     <AvatarFallback>{chats.find((c) => c.id === activeChat)?.name.substring(0, 2)}</AvatarFallback>
                   </Avatar>
-                  <div>
-                    <CardTitle>{chats.find((c) => c.id === activeChat)?.name}</CardTitle>
-                    <CardDescription>
-                      {chats.find((c) => c.id === activeChat)?.status === "online" ? "Online" : "Offline"}
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1 overflow-y-auto p-4">
-                <div className="space-y-4">
-                  {activeMessages.map((msg) => (
+                  {activeMessages.map((msg: Message) => (
                     <div key={msg.id} className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}>
                       {!msg.isUser && (
                         <Avatar className="h-8 w-8 mr-2 mt-1">

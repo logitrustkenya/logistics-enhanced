@@ -1,215 +1,190 @@
 "use client"
 
 import { useState } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Filter, MapPin, Truck, Star, ArrowRight, Leaf } from "lucide-react"
-import Link from "next/link"
+import {
+  Truck,
+  Package,
+  CreditCard,
+  Star,
+  MapPin,
+  Clock,
+  TrendingUp,
+  CheckCircle,
+  AlertCircle,
+  Calendar,
+} from "lucide-react"
 
-export default function ProvidersPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterType, setFilterType] = useState("all")
+export default function ProviderDashboard() {
+  const [activeTab, setActiveTab] = useState("overview")
 
-  // Mock data
-  const providers = [
-    {
-      id: "PRV-001",
-      name: "FastTruck Logistics",
-      logo: "/placeholder.svg",
-      rating: 4.8,
-      reviews: 124,
-      location: "Nairobi",
-      specialties: ["Express Delivery", "Fragile Items", "Nationwide"],
-      ecoFriendly: true,
-      description: "Specializing in fast and reliable deliveries across Kenya with a focus on customer satisfaction.",
-    },
-    {
-      id: "PRV-002",
-      name: "Kenya Express",
-      logo: "/placeholder.svg",
-      rating: 4.6,
-      reviews: 98,
-      location: "Mombasa",
-      specialties: ["Same-Day Delivery", "Heavy Items", "Coastal Region"],
-      ecoFriendly: false,
-      description: "Leading logistics provider in the coastal region with expertise in same-day deliveries.",
-    },
-    {
-      id: "PRV-003",
-      name: "Swift Movers",
-      logo: "/placeholder.svg",
-      rating: 4.5,
-      reviews: 87,
-      location: "Kisumu",
-      specialties: ["Refrigerated Transport", "Western Kenya", "Rural Areas"],
-      ecoFriendly: true,
-      description: "Specialized in serving western Kenya with a focus on refrigerated transport and rural deliveries.",
-    },
-    {
-      id: "PRV-004",
-      name: "Green Logistics",
-      logo: "/placeholder.svg",
-      rating: 4.7,
-      reviews: 76,
-      location: "Nairobi",
-      specialties: ["Eco-Friendly", "Urban Deliveries", "Electric Vehicles"],
-      ecoFriendly: true,
-      description: "Environmentally conscious logistics provider using electric vehicles for urban deliveries.",
-    },
-    {
-      id: "PRV-005",
-      name: "Highlands Transport",
-      logo: "/placeholder.svg",
-      rating: 4.4,
-      reviews: 65,
-      location: "Nakuru",
-      specialties: ["Central Kenya", "Agricultural Products", "Bulk Transport"],
-      ecoFriendly: false,
-      description:
-        "Specialized in transporting agricultural products across central Kenya with bulk transport capabilities.",
-    },
-    {
-      id: "PRV-006",
-      name: "Nairobi Couriers",
-      logo: "/placeholder.svg",
-      rating: 4.3,
-      reviews: 54,
-      location: "Nairobi",
-      specialties: ["Small Packages", "Documents", "Urban Areas"],
-      ecoFriendly: true,
-      description: "Fast and reliable courier service for small packages and documents within urban areas.",
-    },
-  ]
-
-  // Filter providers based on search term
-  const filteredProviders = providers.filter((provider) => {
-    const matchesSearch =
-      provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.specialties.some((specialty) => specialty.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      provider.description.toLowerCase().includes(searchTerm.toLowerCase())
-
-    if (filterType === "eco") {
-      return matchesSearch && provider.ecoFriendly
-    }
-
-    return matchesSearch
-  })
+  const stats: any[] = []
+  const activeJobs: any[] = []
+  const recentCompletions: any[] = []
+  const performanceMetrics: any[] = []
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Logistics Providers</h1>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-[#add64e]/5 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+              Provider Dashboard
+            </h1>
+            <p className="text-white/70 mt-2">
+              Manage your logistics operations and earnings
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-white/20 text-white hover:bg-white/5 bg-transparent"
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule
+            </Button>
+            <Button
+              size="sm"
+              className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
+            >
+              <Package className="mr-2 h-4 w-4" />
+              Browse Jobs
+            </Button>
+          </div>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Find a Provider</CardTitle>
-          <CardDescription>Browse and connect with trusted logistics providers</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="flex w-full items-center gap-2 md:w-2/3">
-                <div className="relative w-full">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search providers by name, location, or specialty..."
-                    className="w-full appearance-none pl-8"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Button variant="outline" size="icon">
-                  <Filter className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant={filterType === "all" ? "default" : "outline"}
-                  className={filterType === "all" ? "bg-custom-green hover:bg-[#9bc943]" : ""}
-                  onClick={() => setFilterType("all")}
-                >
-                  All Providers
-                </Button>
-                <Button
-                  variant={filterType === "eco" ? "default" : "outline"}
-                  className={filterType === "eco" ? "bg-custom-green hover:bg-[#9bc943]" : ""}
-                  onClick={() => setFilterType("eco")}
-                >
-                  <Leaf className="mr-2 h-4 w-4" />
-                  Eco-Friendly
-                </Button>
-              </div>
+        <Tabs
+          defaultValue="overview"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
+          <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
+            {["overview", "jobs", "earnings", "performance"].map((tab) => (
+              <TabsTrigger
+                key={tab}
+                value={tab}
+                className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70 capitalize"
+              >
+                {tab}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {stats.length > 0 ? (
+                stats.map((stat, i) => (
+                  <Card
+                    key={i}
+                    className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium text-white">
+                        {stat.title}
+                      </CardTitle>
+                      <stat.icon className="h-4 w-4 text-[#add64e]" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold text-white">{stat.value}</div>
+                      <p className="text-xs text-white/70">{stat.description}</p>
+                      <div className="mt-2 flex items-center text-xs">
+                        <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">
+                          {stat.change}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <p className="text-white/50 italic col-span-full text-center">
+                  Stats will appear here once available.
+                </p>
+              )}
             </div>
+          </TabsContent>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredProviders.map((provider) => (
-                <Card key={provider.id} className="overflow-hidden">
-                  <CardContent className="p-0">
-                    <div className="p-6">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={provider.logo} alt={provider.name} />
-                          <AvatarFallback>{provider.name.substring(0, 2)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="font-semibold">{provider.name}</h3>
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center">
-                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                              <span className="ml-1 text-sm font-medium">{provider.rating}</span>
-                            </div>
-                            <span className="text-sm text-muted-foreground">({provider.reviews} reviews)</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MapPin className="h-4 w-4" />
-                          <span>{provider.location}</span>
-                        </div>
-                        <p className="mt-2 text-sm">{provider.description}</p>
-                      </div>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {provider.specialties.map((specialty, index) => (
-                          <Badge key={index} variant="outline" className="bg-gray-50">
-                            {specialty}
-                          </Badge>
-                        ))}
-                        {provider.ecoFriendly && (
-                          <Badge variant="outline" className="bg-custom-green/20 text-custom-green border-custom-green">
-                            <Leaf className="mr-1 h-3 w-3" />
-                            Eco-Friendly
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between border-t p-4">
-                      <Button variant="outline" size="sm">
-                        <Truck className="mr-2 h-4 w-4" />
-                        Request Quote
-                      </Button>
-                      <Link
-                        href={`/providers/${provider.id}`}
-                        className="text-sm text-custom-green hover:text-[#9bc943] flex items-center"
-                      >
-                        View Profile
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </Link>
+          <TabsContent value="jobs" className="space-y-6">
+            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">All Active Jobs</CardTitle>
+                <CardDescription className="text-white/70">
+                  Manage your current assignments
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {activeJobs.length > 0 ? (
+                  <div className="space-y-4">
+                    {/* Map through activeJobs */}
+                  </div>
+                ) : (
+                  <p className="text-white/50 italic text-center">
+                    No active jobs at the moment.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="earnings" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-3">
+              {["This Month", "This Week", "Today"].map((label, i) => (
+                <Card
+                  key={i}
+                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-white">{label}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-white">—</div>
+                    <p className="text-xs text-white/70">Earnings data not available</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="performance" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              {["Service Rating Trend", "Completion Rate"].map((title, i) => (
+                <Card
+                  key={i}
+                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-white">{title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
+                      <p className="text-white/50 text-sm italic">No data yet</p>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   )
 }
+
+
 

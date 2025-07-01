@@ -1,12 +1,51 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Package, Truck, BarChart3, Shield, MapPin, Leaf, Menu, X, Sparkles } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowRight, Truck, Menu, X, Sparkles, MapPin, Phone, Instagram, Shield, CheckCircle, AlertTriangle } from "lucide-react"
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const judySteps = [
+    {
+      title: "The Problem",
+      icon: AlertTriangle,
+      content: "Judy runs a cosmetic shop in Nairobi. She takes orders via Instagram and WhatsApp — but her rider sometimes ghosts her, and scammers are a weekly headache.",
+      color: "from-red-500/20 to-orange-500/20",
+      iconColor: "text-red-400"
+    },
+    {
+      title: "Step 1: Easy Setup",
+      icon: MapPin,
+      content: "She simply inputs pickup & delivery details on LogiTrust's platform.",
+      color: "from-blue-500/20 to-cyan-500/20",
+      iconColor: "text-blue-400"
+    },
+    {
+      title: "Step 2: Secure Payment",
+      icon: Shield,
+      content: "Buyer pays securely via M-Pesa integration with built-in escrow protection.",
+      color: "from-[#add64e]/20 to-[#9bc943]/20",
+      iconColor: "text-[#add64e]"
+    },
+    {
+      title: "Step 3: Guaranteed Delivery",
+      icon: CheckCircle,
+      content: "Rider is paid only after delivery is confirmed. No more ghosted deliveries. No more scams. Just trust, built in.",
+      color: "from-green-500/20 to-emerald-500/20",
+      iconColor: "text-green-400"
+    }
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % judySteps.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -25,10 +64,10 @@ export default function Home() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-8">
             <a
-              href="#features"
+              href="#judy-story"
               className="text-sm font-medium text-white/70 hover:text-[#add64e] transition-all duration-300 hover:scale-105"
             >
-              Features
+              How It Works
             </a>
           </nav>
 
@@ -62,10 +101,10 @@ export default function Home() {
             <div className="container py-6 space-y-4">
               <nav className="flex flex-col space-y-3">
                 <a
-                  href="#features"
+                  href="#judy-story"
                   className="text-sm font-medium text-white/70 hover:text-[#add64e] transition-colors py-2"
                 >
-                  Features
+                  How It Works
                 </a>
               </nav>
               <div className="flex flex-col space-y-3 pt-4 border-t border-white/10">
@@ -133,13 +172,13 @@ export default function Home() {
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </a>
-                  <a href="#features">
+                  <a href="#judy-story">
                     <Button
                       size="lg"
                       variant="outline"
                       className="border-white/20 text-white hover:bg-white/5 hover:border-[#add64e]/50 transition-all duration-300 bg-transparent"
                     >
-                      Explore Features
+                      See How It Works
                     </Button>
                   </a>
                 </div>
@@ -198,8 +237,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section id="features" className="relative w-full py-20 md:py-32">
+        {/* Judy's Story Section */}
+        <section id="judy-story" className="relative w-full py-20 md:py-32">
           <div className="absolute inset-0 bg-gradient-to-b from-background to-white/5"></div>
 
           <div className="container relative px-4 md:px-6">
@@ -207,82 +246,118 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#add64e]/10 border border-[#add64e]/20">
                   <div className="h-2 w-2 bg-[#add64e] rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-[#add64e]">Platform Features</span>
+                  <span className="text-sm font-medium text-[#add64e]">Real Stories, Real Solutions</span>
                 </div>
 
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                   <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                    Everything You Need for
+                    Meet Judy: From
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-[#add64e] to-[#9bc943] bg-clip-text text-transparent">
-                    Efficient Logistics
+                    Scams to Success
                   </span>
                 </h2>
 
                 <p className="max-w-[800px] text-lg text-white/70 leading-relaxed">
-                  Our platform connects SMEs with reliable logistics providers, offering transparency, security, and
-                  efficiency through cutting-edge technology.
+                  See how LogiTrust transformed a small business owner's delivery nightmares into seamless operations.
                 </p>
               </div>
             </div>
 
-            <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
-              {[
-                {
-                  icon: Package,
-                  title: "Smart Shipment Management",
-                  description:
-                    "Create, track, and manage shipments with AI-powered insights and real-time updates on your deliveries.",
-                },
-                {
-                  icon: Truck,
-                  title: "Intelligent Provider Matching",
-                  description:
-                    "Get matched with the best logistics providers using our advanced algorithm based on your specific requirements.",
-                },
-                {
-                  icon: Shield,
-                  title: "Blockchain-Secured Payments",
-                  description:
-                    "Pay securely with our blockchain-based escrow system, eliminating fraud risks and building trust.",
-                },
-                {
-                  icon: MapPin,
-                  title: "Real-time GPS Tracking",
-                  description:
-                    "Track shipments in real-time with precise GPS location updates and automated status notifications.",
-                },
-                {
-                  icon: BarChart3,
-                  title: "Advanced Analytics",
-                  description:
-                    "Gain valuable insights with comprehensive analytics, performance metrics, and predictive reporting.",
-                },
-                {
-                  icon: Leaf,
-                  title: "Carbon Impact Tracking",
-                  description:
-                    "Monitor and reduce your environmental footprint with detailed carbon emission tracking and optimization.",
-                },
-              ].map((feature, index) => (
-                <Card
-                  key={index}
-                  className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-[#add64e]/30 transition-all duration-500 hover:scale-105 hover:shadow-xl hover:shadow-[#add64e]/10"
-                >
-                  <CardHeader className="pb-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#add64e]/20 to-[#9bc943]/20 group-hover:from-[#add64e]/30 group-hover:to-[#9bc943]/30 transition-all duration-300">
-                      <feature.icon className="h-7 w-7 text-[#add64e] group-hover:scale-110 transition-transform duration-300" />
+            <div className="max-w-4xl mx-auto">
+              <Card className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative h-96 md:h-80 flex items-center justify-center">
+                    {/* Background pattern */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute top-4 left-4">
+                        <Instagram className="h-8 w-8 text-pink-400" />
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        <Phone className="h-8 w-8 text-green-400" />
+                      </div>
+                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                        <Truck className="h-12 w-12 text-[#add64e]" />
+                      </div>
                     </div>
-                    <CardTitle className="mt-4 text-xl font-semibold text-white group-hover:text-[#add64e] transition-colors duration-300">
-                      {feature.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-white/70 leading-relaxed">{feature.description}</CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
+
+                    {/* Step indicators */}
+                    <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex gap-2">
+                      {judySteps.map((_, index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                            index === currentStep ? 'bg-[#add64e] w-8' : 'bg-white/30'
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Main content area */}
+                    <div className="relative z-10 p-8 text-center max-w-2xl">
+                      <div className="space-y-6">
+                        {/* Icon */}
+                        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${judySteps[currentStep].color} transition-all duration-500`}>
+                          {React.createElement(judySteps[currentStep].icon, {
+                            className: `h-8 w-8 ${judySteps[currentStep].iconColor} transition-colors duration-500`
+                          })}
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-2xl font-bold text-white transition-all duration-500">
+                          {judySteps[currentStep].title}
+                        </h3>
+
+                        {/* Content */}
+                        <p className="text-lg text-white/80 leading-relaxed transition-all duration-500">
+                          {judySteps[currentStep].content}
+                        </p>
+
+                        {/* Progress dots for manual navigation */}
+                        <div className="flex justify-center gap-3 pt-4">
+                          {judySteps.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setCurrentStep(index)}
+                              className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 ${
+                                index === currentStep 
+                                  ? 'bg-[#add64e] shadow-lg shadow-[#add64e]/50' 
+                                  : 'bg-white/30 hover:bg-white/50'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Animated background elements */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      <div className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#add64e]/10 to-transparent rounded-full animate-pulse"></div>
+                      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-l from-[#9bc943]/10 to-transparent rounded-full animate-pulse animation-delay-2000"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Trust indicators */}
+              <div className="mt-12 text-center">
+                <p className="text-[#add64e] font-semibold mb-4">LogiTrust gives her peace of mind</p>
+                <div className="flex flex-wrap justify-center gap-8 text-sm text-white/60">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-[#add64e]" />
+                    <span>No more ghosted deliveries</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-[#add64e]" />
+                    <span>No more scams</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-[#add64e]" />
+                    <span>Just trust, built in</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -392,11 +467,7 @@ export default function Home() {
                   icon: "M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z",
                   label: "Twitter",
                 },
-                {
-                  href: "#",
-                  icon: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z M2 9h4v12H2z M4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z",
-                  label: "LinkedIn",
-                },
+               
               ].map((social, index) => (
                 <a
                   key={index}
@@ -423,6 +494,24 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
     </div>
   )
 }
