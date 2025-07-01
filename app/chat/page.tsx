@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,7 +17,6 @@ export default function ChatPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Define a type for message objects
   type Message = {
     id: string
     sender: string
@@ -27,15 +25,38 @@ export default function ChatPage() {
     isUser: boolean
   }
 
-  // Placeholder for chats data
-  const chats: any[] = []
+  type Chat = {
+    id: string
+    name: string
+    avatar: string
+    status: "online" | "offline"
+    lastMessage: string
+    lastMessageTime: string
+    unread: number
+    messages: Message[]
+  }
 
-  const activeMessages: Message[] = chats.find((chat) => chat.id === activeChat)?.messages || []
+  // Placeholder chat data
+  const chats: Chat[] = [
+    {
+      id: "chat-1",
+      name: "Alice",
+      avatar: "/avatars/alice.jpg",
+      status: "online",
+      lastMessage: "See you soon!",
+      lastMessageTime: "10:45 AM",
+      unread: 2,
+      messages: [
+        { id: "m1", sender: "Alice", content: "Hi there!", time: "10:43 AM", isUser: false },
+        { id: "m2", sender: "Me", content: "Hey!", time: "10:44 AM", isUser: true }
+      ]
+    }
+  ]
+
+  const activeMessages = chats.find((chat) => chat.id === activeChat)?.messages || []
 
   const handleSendMessage = () => {
     if (message.trim() || attachments.length > 0) {
-      // hapa ndio,  would send the message to the backend
-      // bevon console.log("Sending message:", message)
       console.log("Sending message:", message, attachments)
       setMessage("")
       setAttachments([])
@@ -67,6 +88,8 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [activeMessages])
 
+  const activeChatData = chats.find((c) => c.id === activeChat)
+
   return (
     <div className="flex flex-col h-[calc(100vh-10rem)]">
       <div className="flex items-center justify-between mb-4">
@@ -75,6 +98,7 @@ export default function ChatPage() {
       </div>
 
       <div className="flex flex-1 gap-4 h-full overflow-hidden">
+        {/* Sidebar */}
         <Card className="w-1/3">
           <CardHeader>
             <CardTitle>Conversations</CardTitle>
@@ -122,38 +146,40 @@ export default function ChatPage() {
           </CardContent>
         </Card>
 
+        {/* Main Chat Window */}
         <Card className="flex-1 flex flex-col">
-          {activeChat && (
+          {activeChat && activeChatData && (
             <>
-              <CardHeader className="border-b">
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage
-                      src={chats.find((c) => c.id === activeChat)?.avatar}
-                      alt={chats.find((c) => c.id === activeChat)?.name}
-                    />
-                    <AvatarFallback>{chats.find((c) => c.id === activeChat)?.name.substring(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  {activeMessages.map((msg: Message) => (
-                    <div key={msg.id} className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}>
-                      {!msg.isUser && (
-                        <Avatar className="h-8 w-8 mr-2 mt-1">
-                          <AvatarImage src={chats.find((c) => c.id === activeChat)?.avatar} alt={msg.sender} />
-                          <AvatarFallback>{msg.sender.substring(0, 2)}</AvatarFallback>
-                        </Avatar>
-                      )}
-                      <div
-                        className={`max-w-[70%] rounded-lg p-3 ${
-                          msg.isUser ? "bg-green-600 text-white" : "bg-gray-100 text-gray-900"
-                        }`}
-                      >
-                        <p className="text-sm">{msg.content}</p>
-                        <p className="text-xs text-right mt-1 opacity-70">{msg.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <div ref={messagesEndRef} />
+              <CardHeader className="border-b flex items-center gap-3">
+                <Avatar>
+                  <AvatarImage src={activeChatData.avatar} alt={activeChatData.name} />
+                  <AvatarFallback>{activeChatData.name.substring(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium">{activeChatData.name}</p>
+                  <p className="text-sm text-muted-foreground">{activeChatData.status}</p>
                 </div>
+              </CardHeader>
+              <CardContent className="flex-1 overflow-y-auto space-y-4 p-4">
+                {activeMessages.map((msg) => (
+                  <div key={msg.id} className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}>
+                    {!msg.isUser && (
+                      <Avatar className="h-8 w-8 mr-2 mt-1">
+                        <AvatarImage src={activeChatData.avatar} alt={msg.sender} />
+                        <AvatarFallback>{msg.sender.substring(0, 2)}</AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div
+                      className={`max-w-[70%] rounded-lg p-3 ${
+                        msg.isUser ? "bg-green-600 text-white" : "bg-gray-100 text-gray-900"
+                      }`}
+                    >
+                      <p className="text-sm">{msg.content}</p>
+                      <p className="text-xs text-right mt-1 opacity-70">{msg.time}</p>
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
               </CardContent>
               <div className="p-4 border-t">
                 {attachments.length > 0 && (
@@ -202,4 +228,3 @@ export default function ChatPage() {
     </div>
   )
 }
-
