@@ -8,88 +8,127 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { ArrowUpRight, Package, CreditCard, Users, BarChart3, Leaf, TrendingUp, MapPin } from "lucide-react"
 import Link from "next/link"
-import { ShipmentCard } from "@/components/shipment-card"
+
+interface StatCard {
+  title: string
+  value: string
+  description: string
+  icon: React.ComponentType<{ className?: string }>
+  change: string
+  positive: boolean
+}
+
+interface Shipment {
+  id: string
+  origin: string
+  destination: string
+  status: "pending" | "in-transit" | "delivered"
+  provider: string
+  date: string
+  items: string
+  progress: number
+  value: string
+}
+
+interface CostAnalysis {
+  category: string
+  amount: number
+  percentage: number
+}
+
+interface Provider {
+  name: string
+  rating: number
+  shipments: number
+  cost: string
+}
 
 export default function SMEDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
 
-  // Mock data for SME
-  const stats = [
+  // Placeholder data structure - replace with actual data fetching
+  const stats: StatCard[] = [
     {
       title: "Active Shipments",
-      value: "24",
-      description: "8 pending pickup",
+      value: "--",
+      description: "-- pending pickup",
       icon: Package,
-      change: "+12% from last month",
+      change: "-- from last month",
       positive: true,
     },
     {
       title: "Monthly Spend",
-      value: "KSh 127,450",
+      value: "KSh --",
       description: "Logistics costs",
       icon: CreditCard,
-      change: "-8% from last month",
+      change: "-- from last month",
       positive: true,
     },
     {
       title: "Delivery Success Rate",
-      value: "96.8%",
+      value: "--%",
       description: "On-time deliveries",
       icon: TrendingUp,
-      change: "+2.1% improvement",
+      change: "-- improvement",
       positive: true,
     },
     {
       title: "Trusted Providers",
-      value: "12",
+      value: "--",
       description: "Active partnerships",
       icon: Users,
-      change: "+3 new this month",
+      change: "-- new this month",
       positive: true,
     },
   ]
 
-  const recentShipments = [
+  const recentShipments: Shipment[] = [
     {
-      id: "SHP-2024-001",
-      origin: "Nairobi Industrial Area",
-      destination: "Mombasa Port",
-      status: "in-transit",
-      provider: "Kenya Express Logistics",
-      date: "Dec 30, 2024",
-      items: "Manufacturing Equipment",
-      progress: 75,
-      value: "KSh 15,200",
-    },
-    {
-      id: "SHP-2024-002",
-      origin: "Kisumu Warehouse",
-      destination: "Nakuru Distribution Center",
+      id: "Loading...",
+      origin: "Loading origin...",
+      destination: "Loading destination...",
       status: "pending",
-      provider: "Pending Assignment",
-      date: "Dec 31, 2024",
-      items: "Agricultural Products",
-      progress: 5,
-      value: "KSh 8,500",
+      provider: "Loading provider...",
+      date: "--",
+      items: "Loading items...",
+      progress: 0,
+      value: "KSh --",
     },
     {
-      id: "SHP-2024-003",
-      origin: "Eldoret Factory",
-      destination: "Nairobi CBD",
-      status: "delivered",
-      provider: "Swift Cargo",
-      date: "Dec 29, 2024",
-      items: "Textile Products",
-      progress: 100,
-      value: "KSh 12,300",
+      id: "Loading...",
+      origin: "Loading origin...",
+      destination: "Loading destination...",
+      status: "pending",
+      provider: "Loading provider...",
+      date: "--",
+      items: "Loading items...",
+      progress: 0,
+      value: "KSh --",
+    },
+    {
+      id: "Loading...",
+      origin: "Loading origin...",
+      destination: "Loading destination...",
+      status: "pending",
+      provider: "Loading provider...",
+      date: "--",
+      items: "Loading items...",
+      progress: 0,
+      value: "KSh --",
     },
   ]
 
-  const costAnalysis = [
-    { category: "Road Transport", amount: 85600, percentage: 67 },
-    { category: "Air Freight", amount: 28400, percentage: 22 },
-    { category: "Rail Transport", amount: 9200, percentage: 7 },
-    { category: "Storage & Handling", amount: 4250, percentage: 4 },
+  const costAnalysis: CostAnalysis[] = [
+    { category: "Road Transport", amount: 0, percentage: 0 },
+    { category: "Air Freight", amount: 0, percentage: 0 },
+    { category: "Rail Transport", amount: 0, percentage: 0 },
+    { category: "Storage & Handling", amount: 0, percentage: 0 },
+  ]
+
+  const providers: Provider[] = [
+    { name: "Loading provider...", rating: 0, shipments: 0, cost: "KSh --" },
+    { name: "Loading provider...", rating: 0, shipments: 0, cost: "KSh --" },
+    { name: "Loading provider...", rating: 0, shipments: 0, cost: "KSh --" },
   ]
 
   return (
@@ -186,9 +225,155 @@ export default function SMEDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recentShipments.map((shipment) => (
+                    {recentShipments.length > 0 ? (
+                      recentShipments.map((shipment, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="flex-shrink-0">
+                              <Package className="h-5 w-5 text-[#add64e]" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center space-x-2">
+                                <p className="text-sm font-medium text-white">{shipment.id}</p>
+                                <Badge
+                                  className={
+                                    shipment.status === "delivered"
+                                      ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                      : shipment.status === "in-transit"
+                                        ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                        : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                                  }
+                                >
+                                  {shipment.status.replace("-", " ")}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center space-x-1 text-sm text-white/70">
+                                <span>{shipment.origin}</span>
+                                <span>→</span>
+                                <span>{shipment.destination}</span>
+                              </div>
+                              <p className="text-xs text-white/50">
+                                {shipment.items} • {shipment.provider}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-white">{shipment.value}</p>
+                            <p className="text-xs text-white/70">{shipment.date}</p>
+                            <div className="w-20 mt-1">
+                              <Progress value={shipment.progress} className="h-1" />
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-white/50">
+                        <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>No shipments found</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Cost Breakdown */}
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Cost Breakdown</CardTitle>
+                  <CardDescription className="text-white/70">Monthly logistics expenses</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {costAnalysis.map((item, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-white/70">{item.category}</span>
+                          <span className="text-white font-medium">
+                            {item.amount > 0 ? `KSh ${item.amount.toLocaleString()}` : "KSh --"}
+                          </span>
+                        </div>
+                        <Progress value={item.percentage} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                  {costAnalysis.every(item => item.amount === 0) && (
+                    <div className="text-center py-4 text-white/50">
+                      <p className="text-sm">No cost data available</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Environmental Impact */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Leaf className="h-5 w-5 text-[#add64e]" />
+                    Carbon Footprint
+                  </CardTitle>
+                  <CardDescription className="text-white/70">Environmental impact tracking</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-2xl font-bold text-white">-- kg CO₂</p>
+                        <p className="text-sm text-white/70">This month</p>
+                      </div>
+                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">-- reduction</Badge>
+                    </div>
+                    <Progress value={0} className="h-2" />
+                    <p className="text-xs text-white/70">No data available</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white">Performance Metrics</CardTitle>
+                  <CardDescription className="text-white/70">Key operational indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">--</p>
+                      <p className="text-xs text-white/70">Avg. Days</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">--%</p>
+                      <p className="text-xs text-white/70">Success Rate</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">--</p>
+                      <p className="text-xs text-white/70">Avg. Rating</p>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <p className="text-2xl font-bold text-white">KSh --</p>
+                      <p className="text-xs text-white/70">Avg. Cost</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="shipments" className="space-y-6">
+            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
+              <CardHeader>
+                <CardTitle className="text-white">All Shipments</CardTitle>
+                <CardDescription className="text-white/70">Manage your business shipments</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentShipments.length > 0 ? (
+                    recentShipments.map((shipment, index) => (
                       <div
-                        key={shipment.id}
+                        key={index}
                         className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10"
                       >
                         <div className="flex items-center space-x-4">
@@ -228,98 +413,13 @@ export default function SMEDashboard() {
                           </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Cost Breakdown */}
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Cost Breakdown</CardTitle>
-                  <CardDescription className="text-white/70">Monthly logistics expenses</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {costAnalysis.map((item, index) => (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-white/70">{item.category}</span>
-                          <span className="text-white font-medium">KSh {item.amount.toLocaleString()}</span>
-                        </div>
-                        <Progress value={item.percentage} className="h-2" />
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Environmental Impact */}
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Leaf className="h-5 w-5 text-[#add64e]" />
-                    Carbon Footprint
-                  </CardTitle>
-                  <CardDescription className="text-white/70">Environmental impact tracking</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-2xl font-bold text-white">342 kg CO₂</p>
-                        <p className="text-sm text-white/70">This month</p>
-                      </div>
-                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">-15% reduction</Badge>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-white/50">
+                      <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No shipments found</p>
                     </div>
-                    <Progress value={68} className="h-2" />
-                    <p className="text-xs text-white/70">68% of monthly target (500 kg CO₂)</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Performance Metrics</CardTitle>
-                  <CardDescription className="text-white/70">Key operational indicators</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">2.1</p>
-                      <p className="text-xs text-white/70">Avg. Days</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">96.8%</p>
-                      <p className="text-xs text-white/70">Success Rate</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">4.8</p>
-                      <p className="text-xs text-white/70">Avg. Rating</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">KSh 2,340</p>
-                      <p className="text-xs text-white/70">Avg. Cost</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="shipments" className="space-y-6">
-            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-              <CardHeader>
-                <CardTitle className="text-white">All Shipments</CardTitle>
-                <CardDescription className="text-white/70">Manage your business shipments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentShipments.map((shipment) => (
-                    <ShipmentCard key={shipment.id} shipment={shipment} />
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -333,7 +433,10 @@ export default function SMEDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <BarChart3 className="h-16 w-16 text-[#add64e]/50" />
+                    <div className="text-center">
+                      <BarChart3 className="h-16 w-16 text-[#add64e]/50 mx-auto mb-2" />
+                      <p className="text-white/50 text-sm">Chart will appear here</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -343,7 +446,10 @@ export default function SMEDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <MapPin className="h-16 w-16 text-[#add64e]/50" />
+                    <div className="text-center">
+                      <MapPin className="h-16 w-16 text-[#add64e]/50 mx-auto mb-2" />
+                      <p className="text-white/50 text-sm">Map will appear here</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -358,21 +464,23 @@ export default function SMEDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {[
-                    { name: "Kenya Express Logistics", rating: 4.8, shipments: 45, cost: "KSh 2,100" },
-                    { name: "Swift Cargo", rating: 4.6, shipments: 32, cost: "KSh 1,950" },
-                    { name: "Reliable Transport Co.", rating: 4.7, shipments: 28, cost: "KSh 2,250" },
-                  ].map((provider, index) => (
+                  {providers.map((provider, index) => (
                     <div key={index} className="p-4 bg-white/5 rounded-lg border border-white/10">
                       <h3 className="font-medium text-white">{provider.name}</h3>
                       <div className="mt-2 space-y-1 text-sm text-white/70">
-                        <p>Rating: {provider.rating}/5.0</p>
-                        <p>Shipments: {provider.shipments}</p>
+                        <p>Rating: {provider.rating > 0 ? `${provider.rating}/5.0` : "--/5.0"}</p>
+                        <p>Shipments: {provider.shipments > 0 ? provider.shipments : "--"}</p>
                         <p>Avg. Cost: {provider.cost}</p>
                       </div>
                     </div>
                   ))}
                 </div>
+                {providers.every(p => p.shipments === 0) && (
+                  <div className="text-center py-8 text-white/50">
+                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No providers found</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -381,5 +489,4 @@ export default function SMEDashboard() {
     </div>
   )
 }
-
 
