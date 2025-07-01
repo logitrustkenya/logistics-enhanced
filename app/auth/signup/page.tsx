@@ -268,69 +268,8 @@ export default function SignupPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="licenseNumber" className="text-white font-medium">
-                License Number
-              </Label>
-              <Input
-                id="licenseNumber"
-                name="licenseNumber"
-                value={formData.licenseNumber || ""}
-                onChange={handleChange}
-                placeholder="Professional license number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="experience" className="text-white font-medium">
-                Years of Experience
-              </Label>
-              <Select
-                value={formData.experience || ""}
-                onValueChange={(value) => handleSelectChange("experience", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select experience" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="0-2" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    0-2 years
-                  </SelectItem>
-                  <SelectItem value="3-5" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    3-5 years
-                  </SelectItem>
-                  <SelectItem value="6-10" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    6-10 years
-                  </SelectItem>
-                  <SelectItem value="10+" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    10+ years
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="coverage" className="text-white font-medium">
-                Service Coverage Area
-              </Label>
-              <Input
-                id="coverage"
-                name="coverage"
-                value={formData.coverage || ""}
-                onChange={handleChange}
-                placeholder="e.g., Nairobi, Kenya, East Africa"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-          </>
-        )
-
-      case "user":
-        return (
-          <>
-            <div className="space-y-2">
               <Label htmlFor="driverLicense" className="text-white font-medium">
-                Driver's License Number (Optional)
+                User
               </Label>
               <Input
                 id="driverLicense"
@@ -403,6 +342,68 @@ export default function SignupPage() {
                 className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="licenseNumber" className="text-white font-medium">
+                License Number
+              </Label>
+              <Input
+                id="licenseNumber"
+                name="licenseNumber"
+                value={formData.licenseNumber || ""}
+                onChange={handleChange}
+                placeholder="Professional license number"
+                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="experience" className="text-white font-medium">
+                Years of Experience
+              </Label>
+              <Select
+                value={formData.experience || ""}
+                onValueChange={(value) => handleSelectChange("experience", value)}
+              >
+                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
+                  <SelectValue placeholder="Select experience" className="text-white/50" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
+                  <SelectItem value="0-2" className="text-white hover:bg-white/10 focus:bg-white/10">
+                    0-2 years
+                  </SelectItem>
+                  <SelectItem value="3-5" className="text-white hover:bg-white/10 focus:bg-white/10">
+                    3-5 years
+                  </SelectItem>
+                  <SelectItem value="6-10" className="text-white hover:bg-white/10 focus:bg-white/10">
+                    6-10 years
+                  </SelectItem>
+                  <SelectItem value="10+" className="text-white hover:bg-white/10 focus:bg-white/10">
+                    10+ years
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="coverage" className="text-white font-medium">
+                Service Coverage Area
+              </Label>
+              <Input
+                id="coverage"
+                name="coverage"
+                value={formData.coverage || ""}
+                onChange={handleChange}
+                placeholder="e.g., Nairobi, Kenya, East Africa"
+                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
+                required
+              />
+            </div>
+          </>
+        )
+
+      case "user":
+        return (
+          <>
+            
           </>
         )
 
@@ -482,21 +483,18 @@ export default function SignupPage() {
                       SME
                     </TabsTrigger>
                     <TabsTrigger
-                      value="sme"
+                      value="courier"
                       className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
                     >
-                      User
+                      Courier
                     </TabsTrigger>
                     <TabsTrigger
                       value="user"
                       className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
                     >
-                      Provider
+                      User
                     </TabsTrigger>
-                  <TabsTrigger
-                      value="providers"
-                      className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-                    ></TabsTrigger>
+                  
                   
                 </TabsList>
                 </Tabs>
