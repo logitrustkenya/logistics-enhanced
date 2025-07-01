@@ -43,7 +43,7 @@ export function ShipmentRequestCard({ request }: ShipmentRequestProps) {
   }
 
   return (
-    <div className="rounded-lg border p-4 hover:bg-gray-50 transition-colors">
+    <div className="rounded-lg border p-4  transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Package className="h-5 w-5 text-gray-500" />

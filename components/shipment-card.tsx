@@ -46,7 +46,7 @@ export function ShipmentCard({ shipment }: ShipmentProps) {
   }
 
   return (
-    <div className="rounded-lg border p-4 hover:bg-gray-50 transition-colors">
+    <div className="rounded-lg border p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Package className="h-5 w-5 text-gray-500" />
@@ -85,7 +85,7 @@ export function ShipmentCard({ shipment }: ShipmentProps) {
       <div className="mt-4 flex justify-end">
         <Link
           href={`/shipments/${shipment.id}`}
-          className="text-sm text-green-600 hover:text-green-700 flex items-center"
+          className="text-sm text-[#9bc943] flex items-center"
         >
           View details
           <ArrowRight className="ml-1 h-4 w-4" />

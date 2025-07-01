@@ -196,7 +196,7 @@ export default function ShipmentsPage() {
 
             <div className="grid gap-4">
               {sortedShipments.map((shipment) => (
-                <div key={shipment.id} className="rounded-lg border p-4 hover:bg-gray-50 transition-colors">
+                <div key={shipment.id} className="rounded-lg border p-4 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Package className="h-5 w-5 text-gray-500" />
@@ -235,7 +235,7 @@ export default function ShipmentsPage() {
                   <div className="mt-4 flex justify-end">
                     <Link
                       href={`/shipments/${shipment.id}`}
-                      className="text-sm text-custom-green hover:text-[#9bc943] flex items-center"
+                      className="text-sm text-[#9bc943] flex items-center"
                     >
                       View details
                       <ArrowRight className="ml-1 h-4 w-4" />

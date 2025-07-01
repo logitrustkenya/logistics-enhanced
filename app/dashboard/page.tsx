@@ -93,7 +93,7 @@ export default function DashboardPage() {
             Export
           </Button>
             <Link href="/shipments/create">
-              <Button size="sm" className="bg-custom-green hover:bg-[#9bc943]">
+              <Button size="sm" className="bg-custom-green bg-[#9bc943]">
                 <Package className="mr-2 h-4 w-4" />
                 New Shipment
               </Button>
@@ -122,7 +122,7 @@ export default function DashboardPage() {
                   <div className="mt-2 flex items-center text-xs">
                       <Badge
                         variant={stat.positive ? "default" : "destructive"}
-                        className={stat.positive ? "bg-custom-green" : ""}
+                        className={stat.positive ? "bg-[#9bc943]" : ""}
                       >
                         {stat.change}
                       </Badge>
@@ -131,6 +131,7 @@ export default function DashboardPage() {
               </Card>
             ))}
           </div>
+          
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4">
               <CardHeader>
@@ -142,9 +143,9 @@ export default function DashboardPage() {
                   {shipments.map((shipment) => (
                     <ShipmentCard key={shipment.id} shipment={shipment} />
                   ))}
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-center mt-4 ">
                     <Link href="/shipments">
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full hover:bg-[#add64e] hover:text-gray-800">
                         View all shipments
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
@@ -185,11 +186,11 @@ export default function DashboardPage() {
                     <Progress value={92} className="h-2 bg-gray-200" />
                   </div>
                   <div className="pt-4 grid grid-cols-2 gap-4 text-center text-sm">
-                    <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="bg-[#14100d] p-3 rounded-lg">
                       <p className="text-muted-foreground">Avg. Delivery Time</p>
                       <p className="font-medium mt-1">2.3 days</p>
                     </div>
-                    <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="bg-[#14100d] text- p-3 rounded-lg">
                       <p className="text-muted-foreground">Delayed Shipments</p>
                       <p className="font-medium mt-1">4 of 52</p>
                     </div>

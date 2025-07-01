@@ -39,7 +39,7 @@ export default function ShipmentDetailsPage({ params }: { params: { id: string }
     destination: "Mombasa, Nyali Road",
     destinationCity: "Mombasa",
     status: "in-transit",
-    provider: "FastTruck Logistics",
+    providerName: "FastTruck Logistics",
     date: "Apr 2, 2025",
     estimatedDelivery: "Apr 5, 2025",
     items: "Office Supplies",
@@ -249,7 +249,7 @@ export default function ShipmentDetailsPage({ params }: { params: { id: string }
               <h3 className="font-medium flex items-center gap-1">
                 <Truck className="h-4 w-4" /> Logistics Provider
               </h3>
-              <p className="text-sm text-muted-foreground">{shipment.provider}</p>
+              <p className="text-sm text-muted-foreground">{shipment.providerName}</p>
             </div>
             {shipment.specialHandling.length > 0 && (
               <div className="mt-4">

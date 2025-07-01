@@ -22,20 +22,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <div className="hidden md:flex md:flex-1">
-        <form className="relative">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-          />
-        </form>
+        
       </div>
       <div className="flex flex-1 items-center justify-end gap-4 md:justify-end">
         <Button variant="outline" size="icon" className="relative">
           <MessageSquare className="h-5 w-5" />
           {messages > 0 && (
-            <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-green-500">
+            <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-[#add64e]">
               {messages}
             </Badge>
           )}
@@ -43,7 +36,7 @@ export function Header() {
         <Button variant="outline" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           {notifications > 0 && (
-            <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-green-500">
+            <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-[#add64e]">
               {notifications}
             </Badge>
           )}
