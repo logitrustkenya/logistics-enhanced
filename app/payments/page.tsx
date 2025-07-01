@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,84 +15,33 @@ import {
   Clock,
   AlertTriangle,
   ArrowRight,
-  Wallet,
   FileText,
 } from "lucide-react"
 import Link from "next/link"
 
+type Payment = {
+  id: string
+  shipmentId: string
+  provider: string
+  route: string
+  method: string
+  amount: string
+  date: string
+  status: string
+}
+
 export default function PaymentsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
+  const [payments, setPayments] = useState<Payment[]>([])
 
-  // Mock data
-  const payments = [
-    {
-      id: "PAY-1234",
-      shipmentId: "SHP-1236",
-      amount: "KSh 3,500",
-      status: "completed",
-      method: "M-Pesa",
-      reference: "MPESA123456",
-      date: "Apr 1, 2025",
-      provider: "Kenya Express",
-      route: "Nairobi to Eldoret",
-    },
-    {
-      id: "PAY-1235",
-      shipmentId: "SHP-1234",
-      amount: "KSh 4,200",
-      status: "pending",
-      method: "Escrow",
-      reference: "ESC789012",
-      date: "Apr 2, 2025",
-      provider: "FastTruck Logistics",
-      route: "Nairobi to Mombasa",
-    },
-    {
-      id: "PAY-1236",
-      shipmentId: "SHP-1233",
-      amount: "KSh 2,800",
-      status: "completed",
-      method: "Credit Card",
-      reference: "CC345678",
-      date: "Mar 30, 2025",
-      provider: "Swift Movers",
-      route: "Kisumu to Nakuru",
-    },
-    {
-      id: "PAY-1237",
-      shipmentId: "SHP-1232",
-      amount: "KSh 1,500",
-      status: "failed",
-      method: "M-Pesa",
-      reference: "MPESA901234",
-      date: "Mar 29, 2025",
-      provider: "Nairobi Couriers",
-      route: "Nairobi to Thika",
-    },
-    {
-      id: "PAY-1238",
-      shipmentId: "SHP-1231",
-      amount: "KSh 5,100",
-      status: "completed",
-      method: "Wallet",
-      reference: "WAL567890",
-      date: "Mar 28, 2025",
-      provider: "Highlands Transport",
-      route: "Nakuru to Nairobi",
-    },
-    {
-      id: "PAY-1239",
-      shipmentId: "SHP-1230",
-      amount: "KSh 3,200",
-      status: "pending",
-      method: "Escrow",
-      reference: "ESC123789",
-      date: "Mar 27, 2025",
-      provider: "Green Logistics",
-      route: "Nairobi to Machakos",
-    },
-  ]
+  useEffect(() => {
+    const fetchPayments = async () => {
+      // TODO: Replace with real data fetching    bevon do ua things 
+      setPayments([]) // Simulate loading state / empty state
+    }
+    fetchPayments()
+  }, [])
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -122,20 +71,15 @@ export default function PaymentsPage() {
     }
   }
 
-  // Filter payments based on search term and active tab
   const filteredPayments = payments.filter((payment) => {
-    const matchesSearch =
-      payment.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.shipmentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.route.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      payment.method.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = (payment.id?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+      || (payment.shipmentId?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+      || (payment.provider?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+      || (payment.route?.toLowerCase() || "").includes(searchTerm.toLowerCase())
+      || (payment.method?.toLowerCase() || "").includes(searchTerm.toLowerCase())
 
-    if (activeTab === "all") {
-      return matchesSearch
-    } else {
-      return matchesSearch && payment.status === activeTab
-    }
+    if (activeTab === "all") return matchesSearch
+    return matchesSearch && payment.status === activeTab
   })
 
   return (
@@ -147,12 +91,6 @@ export default function PaymentsPage() {
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Link href="/payments/wallet">
-            <Button size="sm" className="bg-custom-green hover:bg-[#9bc943]">
-              <Wallet className="mr-2 h-4 w-4" />
-              Wallet
-            </Button>
-          </Link>
         </div>
       </div>
 
@@ -198,7 +136,7 @@ export default function PaymentsPage() {
                 <div className="hidden md:block">Status</div>
                 <div className="text-right">Actions</div>
               </div>
-              {filteredPayments.map((payment) => (
+              {filteredPayments.map((payment: any) => (
                 <div
                   key={payment.id}
                   className="grid grid-cols-6 gap-4 p-4 border-b hover:bg-gray-50 transition-colors"
@@ -208,9 +146,8 @@ export default function PaymentsPage() {
                     <div className="text-sm text-muted-foreground">
                       <Link href={`/shipments/${payment.shipmentId}`} className="hover:underline">
                         {payment.shipmentId}
-                      </Link>
-                      {" • "}
-                      {payment.provider}
+                      </Link>{" "}
+                      • {payment.provider}
                     </div>
                     <div className="text-xs text-muted-foreground md:hidden mt-1">
                       {payment.amount} • {payment.date}
@@ -235,7 +172,9 @@ export default function PaymentsPage() {
                 </div>
               ))}
               {filteredPayments.length === 0 && (
-                <div className="p-4 text-center text-muted-foreground">No payments found matching your criteria.</div>
+                <div className="p-4 text-center text-muted-foreground">
+                  No payments found matching your criteria.
+                </div>
               )}
             </div>
           </div>
@@ -249,6 +188,7 @@ export default function PaymentsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {/* M-Pesa */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-4">
                 <div className="h-10 w-10 rounded-full bg-custom-green/20 flex items-center justify-center">
@@ -259,24 +199,10 @@ export default function PaymentsPage() {
                   <p className="text-sm text-muted-foreground">Connected • Primary</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm">
-                Manage
-              </Button>
+              <Button variant="outline" size="sm">Manage</Button>
             </div>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Wallet className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-medium">Wallet</h3>
-                  <p className="text-sm text-muted-foreground">Balance: KSh 12,500</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">
-                Top Up
-              </Button>
-            </div>
+
+            {/* Credit Card */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-4">
                 <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
@@ -287,15 +213,15 @@ export default function PaymentsPage() {
                   <p className="text-sm text-muted-foreground">Not connected</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm">
-                Connect
-              </Button>
+              <Button variant="outline" size="sm">Connect</Button>
             </div>
+
+            {/* Add Payment Method */}
             <div className="mt-4">
-            <Button className="w-full bg-custom-green hover:bg-[#9bc943]">
-              <CreditCard className="mr-2 h-4 w-4" />
-              Add Payment Method
-            </Button>
+              <Button className="w-full bg-custom-green hover:bg-[#9bc943]">
+                <CreditCard className="mr-2 h-4 w-4" />
+                Add Payment Method
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -303,4 +229,3 @@ export default function PaymentsPage() {
     </div>
   )
 }
-

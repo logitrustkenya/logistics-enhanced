@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -17,7 +16,7 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Profile Settings</h1>
         <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
@@ -32,35 +31,55 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
                 <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback className="text-lg">JD</AvatarFallback>
               </Avatar>
               <div className="text-center">
                 <h2 className="text-xl font-bold">John Doe</h2>
-                <p className="text-sm text-muted-foreground">john@example.com</p>
-                <Badge className="mt-2 bg-custom-green/20 text-custom-green hover:bg-custom-green/20">SME</Badge>
+                <p className="text-sm text-slate-600">john@example.com</p>
+                <Badge className="mt-2 bg-green-100 text-green-700 hover:bg-green-100">SME</Badge>
               </div>
-              <Button className="w-full bg-custom-green hover:bg-[#9bc943]">Change Avatar</Button>
+              <Button className="w-full bg-green-600 hover:bg-green-700">Change Avatar</Button>
             </div>
 
             <div className="mt-6 space-y-1">
-              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("profile")}>
-                <User className="mr-2 h-4 w-4 text-custom-green" />
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-start ${activeTab === 'profile' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                onClick={() => setActiveTab("profile")}
+              >
+                <User className="mr-2 h-4 w-4" />
                 Personal Information
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("business")}>
-                <Building className="mr-2 h-4 w-4 text-custom-green" />
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-start ${activeTab === 'business' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                onClick={() => setActiveTab("business")}
+              >
+                <Building className="mr-2 h-4 w-4" />
                 Business Details
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("notifications")}>
-                <Bell className="mr-2 h-4 w-4 text-custom-green" />
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-start ${activeTab === 'notifications' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                onClick={() => setActiveTab("notifications")}
+              >
+                <Bell className="mr-2 h-4 w-4" />
                 Notifications
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("security")}>
-                <Shield className="mr-2 h-4 w-4 text-custom-green" />
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-start ${activeTab === 'security' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                onClick={() => setActiveTab("security")}
+              >
+                <Shield className="mr-2 h-4 w-4" />
                 Security
               </Button>
-              <Button variant="ghost" className="w-full justify-start text-custom-green hover:text-[#9bc943]" onClick={() => setActiveTab("payment")}>
-                <CreditCard className="mr-2 h-4 w-4 text-custom-green" />
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-start ${activeTab === 'payment' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                onClick={() => setActiveTab("payment")}
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
                 Payment Methods
               </Button>
             </div>
@@ -76,6 +95,7 @@ export default function ProfilePage() {
               <TabsTrigger value="security">Security</TabsTrigger>
               <TabsTrigger value="payment">Payment</TabsTrigger>
             </TabsList>
+            
             <TabsContent value="profile" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -96,22 +116,22 @@ export default function ProfilePage() {
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <Input id="email" defaultValue="john@example.com" />
+                      <Mail className="h-4 w-4 text-slate-500" />
+                      <Input id="email" defaultValue="john@example.com" className="flex-1" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <Input id="phone" defaultValue="+254 712 345 678" />
+                      <Phone className="h-4 w-4 text-slate-500" />
+                      <Input id="phone" defaultValue="+254 712 345 678" className="flex-1" />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Address</Label>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <Textarea id="address" defaultValue="123 Kimathi Street, Nairobi, Kenya" />
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-slate-500 mt-3" />
+                      <Textarea id="address" defaultValue="123 Kimathi Street, Nairobi, Kenya" className="flex-1" />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -126,10 +146,11 @@ export default function ProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Changes</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Save Changes</Button>
                 </CardContent>
               </Card>
             </TabsContent>
+            
             <TabsContent value="business" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -140,8 +161,8 @@ export default function ProfilePage() {
                   <div className="space-y-2">
                     <Label htmlFor="businessName">Business Name</Label>
                     <div className="flex items-center gap-2">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <Input id="businessName" defaultValue="Acme Inc" />
+                      <Building className="h-4 w-4 text-slate-500" />
+                      <Input id="businessName" defaultValue="Acme Inc" className="flex-1" />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -161,9 +182,9 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="businessAddress">Business Address</Label>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <Textarea id="businessAddress" defaultValue="456 Kenyatta Avenue, Nairobi, Kenya" />
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-slate-500 mt-3" />
+                      <Textarea id="businessAddress" defaultValue="456 Kenyatta Avenue, Nairobi, Kenya" className="flex-1" />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -174,22 +195,23 @@ export default function ProfilePage() {
                     <Label htmlFor="website">Website</Label>
                     <Input id="website" defaultValue="https://www.acmeinc.co.ke" />
                   </div>
-                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Changes</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Save Changes</Button>
                 </CardContent>
               </Card>
             </TabsContent>
+            
             <TabsContent value="notifications" className="space-y-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Notification Preferences</CardTitle>
                   <CardDescription>Manage how you receive notifications</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-4">
+                <CardContent className="space-y-6">
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Shipment Updates</Label>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-slate-600">
                           Receive notifications about your shipment status changes
                         </p>
                       </div>
@@ -217,7 +239,7 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Quote Requests</Label>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-slate-600">
                           Receive notifications when you receive new quotes
                         </p>
                       </div>
@@ -245,7 +267,7 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Payment Updates</Label>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-slate-600">
                           Receive notifications about payment status changes
                         </p>
                       </div>
@@ -273,7 +295,7 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Marketing</Label>
-                        <p className="text-sm text-muted-foreground">Receive promotional offers and updates</p>
+                        <p className="text-sm text-slate-600">Receive promotional offers and updates</p>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center space-x-2">
@@ -297,10 +319,11 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
-                  <Button className="bg-custom-green hover:bg-[#9bc943]">Save Preferences</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Save Preferences</Button>
                 </CardContent>
               </Card>
             </TabsContent>
+            
             <TabsContent value="security" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -324,24 +347,25 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Two-Factor Authentication</Label>
-                        <p className="text-sm text-muted-foreground">Add an extra layer of security to your account</p>
+                        <p className="text-sm text-slate-600">Add an extra layer of security to your account</p>
                       </div>
                       <Switch id="2fa" />
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Login Notifications</Label>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-slate-600">
                           Receive notifications when someone logs into your account
                         </p>
                       </div>
                       <Switch id="login-notifications" defaultChecked />
                     </div>
                   </div>
-                  <Button className="bg-custom-green hover:bg-[#9bc943]">Update Security Settings</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Update Security Settings</Button>
                 </CardContent>
               </Card>
             </TabsContent>
+            
             <TabsContent value="payment" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -352,12 +376,12 @@ export default function ProfilePage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-custom-green/20 flex items-center justify-center">
-                          <CreditCard className="h-5 w-5 text-custom-green" />
+                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                          <CreditCard className="h-5 w-5 text-green-600" />
                         </div>
                         <div>
                           <h3 className="font-medium">M-Pesa</h3>
-                          <p className="text-sm text-muted-foreground">Connected • Primary</p>
+                          <p className="text-sm text-slate-600">Connected • Primary</p>
                         </div>
                       </div>
                       <Button variant="outline" size="sm">
@@ -371,7 +395,7 @@ export default function ProfilePage() {
                         </div>
                         <div>
                           <h3 className="font-medium">Credit Card</h3>
-                          <p className="text-sm text-muted-foreground">**** **** **** 4242</p>
+                          <p className="text-sm text-slate-600">**** **** **** 4242</p>
                         </div>
                       </div>
                       <Button variant="outline" size="sm">
@@ -379,7 +403,7 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                   </div>
-                  <Button className="bg-custom-green hover:bg-[#9bc943]">Add Payment Method</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Add Payment Method</Button>
                 </CardContent>
               </Card>
             </TabsContent>

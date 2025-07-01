@@ -1,85 +1,67 @@
-import { Package, Truck, CreditCard, MessageSquare, CheckCircle, Clock } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Package, Truck, CreditCard, AlertCircle } from "lucide-react"
+
+const activities = [
+  {
+    id: 1,
+    type: "shipment",
+    title: "Shipment SHP-1234 picked up",
+    description: "FastTruck Logistics collected your package",
+    time: "2 hours ago",
+    icon: Package,
+    status: "success",
+  },
+  {
+    id: 2,
+    type: "payment",
+    title: "Payment processed",
+    description: "KSh 2,450 charged for shipment SHP-1233",
+    time: "4 hours ago",
+    icon: CreditCard,
+    status: "success",
+  },
+  {
+    id: 3,
+    type: "delivery",
+    title: "Delivery completed",
+    description: "SHP-1232 delivered to Mombasa",
+    time: "1 day ago",
+    icon: Truck,
+    status: "success",
+  },
+  {
+    id: 4,
+    type: "alert",
+    title: "Delivery delayed",
+    description: "SHP-1231 delayed due to weather conditions",
+    time: "2 days ago",
+    icon: AlertCircle,
+    status: "warning",
+  },
+]
 
 export function RecentActivity() {
-  const activities = [
-    {
-      id: 1,
-      type: "shipment_created",
-      message: "New shipment created",
-      details: "SHP-1237 to Nakuru",
-      time: "10 minutes ago",
-      icon: Package,
-      iconColor: "text-blue-500",
-      iconBg: "bg-blue-100",
-    },
-    {
-      id: 2,
-      type: "provider_assigned",
-      message: "Provider assigned",
-      details: "FastTruck Logistics for SHP-1234",
-      time: "1 hour ago",
-      icon: Truck,
-      iconColor: "text-green-500",
-      iconBg: "bg-green-100",
-    },
-    {
-      id: 3,
-      type: "payment_completed",
-      message: "Payment completed",
-      details: "KSh 3,500 for SHP-1236",
-      time: "3 hours ago",
-      icon: CreditCard,
-      iconColor: "text-purple-500",
-      iconBg: "bg-purple-100",
-    },
-    {
-      id: 4,
-      type: "message_received",
-      message: "New message",
-      details: "From Kenya Express regarding SHP-1236",
-      time: "5 hours ago",
-      icon: MessageSquare,
-      iconColor: "text-yellow-500",
-      iconBg: "bg-yellow-100",
-    },
-    {
-      id: 5,
-      type: "shipment_delivered",
-      message: "Shipment delivered",
-      details: "SHP-1236 delivered successfully",
-      time: "Yesterday",
-      icon: CheckCircle,
-      iconColor: "text-green-500",
-      iconBg: "bg-green-100",
-    },
-    {
-      id: 6,
-      type: "shipment_delayed",
-      message: "Shipment delayed",
-      details: "SHP-1233 delayed by 1 day",
-      time: "Yesterday",
-      icon: Clock,
-      iconColor: "text-red-500",
-      iconBg: "bg-red-100",
-    },
-  ]
-
   return (
     <div className="space-y-4">
       {activities.map((activity) => (
-        <div key={activity.id} className="flex items-start gap-4">
-          <div className={cn("rounded-full p-2", activity.iconBg)}>
-            <activity.icon className={cn("h-4 w-4", activity.iconColor)} />
+        <div key={activity.id} className="flex items-start space-x-3">
+          <div
+            className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+              activity.status === "success" ? "bg-green-100" : "bg-yellow-100"
+            }`}
+          >
+            <activity.icon
+              className={`h-4 w-4 ${activity.status === "success" ? "text-green-600" : "text-yellow-600"}`}
+            />
           </div>
-          <div className="flex-1 space-y-1">
-            <p className="text-sm font-medium leading-none">{activity.message}</p>
-            <p className="text-sm text-muted-foreground">{activity.details}</p>
-            <p className="text-xs text-muted-foreground">{activity.time}</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+            <p className="text-sm text-gray-500">{activity.description}</p>
+            <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
           </div>
         </div>
       ))}
     </div>
   )
 }
+
 
