@@ -2,6 +2,8 @@
 
 import type React from "react"
 import { useState } from "react"
+  import axios from "axios"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -64,30 +66,67 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
-    if (e) e.preventDefault()
-    setIsSubmitting(true)
+  // const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
+  //   if (e) e.preventDefault()
+  //   setIsSubmitting(true)
 
-    if (!validateForm()) {
-      setIsSubmitting(false)
-      return
-    }
+  //   if (!validateForm()) {
+  //     setIsSubmitting(false)
+  //     return
+  //   }
 
-    try {
-      // Handle login logic here
-      console.log("Login attempt:", formData)
+  //   try {
+  //     // Handle login logic here
+  //     console.log("Login attempt:", formData)
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+  //     // Simulate API call
+  //     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Success handling would go here
-      alert("Login successful!")
-    } catch (error) {
-      setErrors({ general: "Invalid email or password. Please try again." })
-    } finally {
-      setIsSubmitting(false)
-    }
+  //     // Success handling would go here
+  //     alert("Login successful!")
+  //   } catch (error) {
+  //     setErrors({ general: "Invalid email or password. Please try again." })
+  //   } finally {
+  //     setIsSubmitting(false)
+  //   }
+  // }
+
+
+
+const router = useRouter()
+
+const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
+  if (e) e.preventDefault()
+  setIsSubmitting(true)
+
+  if (!validateForm()) {
+    setIsSubmitting(false)
+    return
   }
+
+  try {
+    const response = await axios.post("https://logistics-backend-1-rq78.onrender.com/api/login", formData, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    })
+
+    // On success
+    alert("Login successful!")
+    router.push("/dashboard") // 🔁 redirect after login
+
+  } catch (error: any) {
+    if (error.response && error.response.data?.message) {
+      setErrors({ general: error.response.data.message })
+    } else {
+      setErrors({ general: "Invalid email or password. Please try again." })
+    }
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
+
+  
 
   const handleGoogleSignIn = () => {
     // Handle Google sign in logic
