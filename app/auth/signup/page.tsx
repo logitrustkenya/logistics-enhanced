@@ -115,35 +115,9 @@ export default function SignupPage() {
     })
   }
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault()
-  //   setIsSubmitting(true)
+// Next.js router for navigation
+const router = useRouter();
 
-  //   // Validate form
-  //   if (!validateForm()) {
-  //     setIsSubmitting(false)
-  //     return
-  //   }
-
-  //   try {
-  //     // Handle signup logic here
-  //     console.log({ userType, ...formData })
-
-  //     // Simulate API call
-  //     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  //     // Success handling would go here
-  //     alert("Account created successfully!")
-  //   } catch (error) {
-  //     setErrors({ general: "An error occurred during signup. Please try again." })
-  //   } finally {
-  //     setIsSubmitting(false)
-  //   }
-  // }
-
-  // Helper function to get password validation status
-  
-const router = useRouter()
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
   setIsSubmitting(true)
@@ -164,10 +138,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       withCredentials: true, // If your backend uses cookies/sessions
     })
 
-    alert("Account created successfully!")
-    // Optional: reset form or redirect
+    if (response.status === 200 || response.status === 201) {
+      alert("Account created successfully!")
+  console.log("Signup successful:", response.data)
     router.push("/auth/login")
-
+    }
     
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
