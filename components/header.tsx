@@ -22,27 +22,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-white/10 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 px-4 md:px-6">
-      <div className="hidden md:flex md:flex-1">
-        <form className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 text-white/50 transform -translate-y-1/2" />
-          <Input
-            type="search"
-            placeholder="Search shipments, providers..."
-            className="w-full bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm pl-10 transition-all duration-300"
-          />
-        </form>
-      </div>
-
       <div className="flex flex-1 items-center justify-end gap-3 md:justify-end">
-        {/* Mobile Search */}
-        <Button
-          variant="outline"
-          size="icon"
-          className="md:hidden border-white/20 text-white hover:bg-white/5 bg-transparent hover:border-[#add64e]/50 transition-all duration-300"
-        >
-          <Search className="h-4 w-4" />
-        </Button>
-
+      
         {/* Messages */}
         <Button
           variant="outline"
@@ -87,7 +68,7 @@ export function Header() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-gray-900/95 backdrop-blur-xl border-white/20 shadow-xl">
+          <DropdownMenuContent align="end" className="w-56 bg-[#14100d] backdrop-blur-xl border-white/20 shadow-xl">
             <DropdownMenuLabel className="text-white">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">John Doe</p>
