@@ -2,6 +2,8 @@
 
 import type React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+  import axios from "axios"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -113,33 +115,54 @@ export default function SignupPage() {
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+// Next.js router for navigation
+const router = useRouter();
 
-    // Validate form
-    if (!validateForm()) {
-      setIsSubmitting(false)
-      return
-    }
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
 
-    try {
-      // Handle signup logic here
-      console.log({ userType, ...formData })
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Success handling would go here
-      alert("Account created successfully!")
-    } catch (error) {
-      setErrors({ general: "An error occurred during signup. Please try again." })
-    } finally {
-      setIsSubmitting(false)
-    }
+  if (!validateForm()) {
+    setIsSubmitting(false)
+    return
   }
 
-  // Helper function to get password validation status
+  try {
+    const response = await axios.post("https://logistics-backend-1-rq78.onrender.com/api/signup", {
+      userType,
+      ...formData,
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true, // If your backend uses cookies/sessions
+    })
+
+    if (response.status === 200 || response.status === 201) {
+      alert("Account created successfully!")
+  console.log("Signup successful:", response.data)
+    router.push("/auth/login")
+    }
+    
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      const serverErrors = error.response?.data?.errors
+      const generalError = error.response?.data?.message || "Signup failed"
+
+      if (serverErrors) {
+        setErrors(serverErrors)
+      } else {
+        setErrors({ general: generalError })
+      }
+    } else {
+      setErrors({ general: "An unexpected error occurred." })
+    }
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
+  
   const getPasswordValidationStatus = () => {
     const isValidLength = validatePassword(formData.password)
     const isMatching = validateConfirmPassword(formData.password, formData.confirmPassword)
