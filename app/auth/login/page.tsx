@@ -97,7 +97,7 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
           else if (userType === 'user') {
             router.push("/dashboard/user")
           } else {
-              router.push("/login")
+              router.push("/")
             }
     }
   } catch (error: any) {
