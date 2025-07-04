@@ -88,12 +88,12 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
       }
     )
 
-    if (response && response.data?.user) {
+    if (response.data.success === true) {
       console.log("Login successful:", response.data)
 
       const userType = response.data.user.userType
       localStorage.setItem("userType", userType)
-
+      localStorage.setItem("token", response.data.token)
       // Route map instead of nested if/else
       const dashboardRoutes: Record<string, string> = {
         admin: "/dashboard/admin",
