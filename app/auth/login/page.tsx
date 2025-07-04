@@ -94,8 +94,11 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
           else if (userType === 'sme') {
             router.push("/dashboard/sme")
           } 
+           else if (userType === 'courier') {
+            router.push("/dashboard/courier")
+          } 
 
-          else if (userType === 'sme') {
+          else if (userType === 'provider') {
             router.push("/dashboard/provider")
           } 
           else if (userType === 'user') {
