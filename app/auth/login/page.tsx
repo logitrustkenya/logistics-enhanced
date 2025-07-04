@@ -72,54 +72,59 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
   if (e) e.preventDefault()
   setIsSubmitting(true)
 
+  // Validate form before submitting
   if (!validateForm()) {
     setIsSubmitting(false)
     return
   }
 
   try {
-    const response = await axios.post("https://logistics-backend-1-rq78.onrender.com/api/login", formData, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    })
+    const response = await axios.post(
+      "https://logistics-backend-1-rq78.onrender.com/api/login",
+      formData,
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    )
 
-        if (response) {
-          console.log("Login successful:", response.data)
-          //toaster ----ow success message 
-          const userType = response.data.user.userType
-          localStorage.setItem("userType", userType)
-          if (userType === 'admin') {
-            router.push("/dashboard/admin")
-          }
-          else if (userType === 'sme') {
-            router.push("/dashboard/sme")
-          } 
-           else if (userType === 'courier') {
-            router.push("/dashboard/courier")
-          } 
+    if (response && response.data?.user) {
+      console.log("Login successful:", response.data)
 
-          else if (userType === 'provider') {
-            router.push("/dashboard/provider")
-          } 
-          else if (userType === 'user') {
-            router.push("/dashboard/user")
-          } else {
-              router.push("/")
-            }
-    }
-  } catch (error: any) {
-    if (error.response && error.response.data?.message) {
-      setErrors({ general: error.response.data.message })
+      const userType = response.data.user.userType
+      localStorage.setItem("userType", userType)
+
+      // Route map instead of nested if/else
+      const dashboardRoutes: Record<string, string> = {
+        admin: "/dashboard/admin",
+        sme: "/dashboard/sme",
+        courier: "/dashboard/courier",
+        provider: "/dashboard/provider",
+        user: "/dashboard/user",
+      }
+
+      const route = dashboardRoutes[userType] || "/"
+      router.push(route)
+
     } else {
-      setErrors({ general: "Invalid email or password. Please try again." })
+      setErrors({ general: "Unexpected server response. Try again." })
     }
+
+  } catch (error: any) {
+    console.error("Login error:", error)
+
+    if (error.response?.data?.message) {
+      setErrors({ general: error.response.data.message })
+    } else if (error.message) {
+      setErrors({ general: error.message })
+    } else {
+      setErrors({ general: "Something went wrong. Try again later." })
+    }
+
   } finally {
     setIsSubmitting(false)
   }
 }
-
-
-  
 
   const handleGoogleSignIn = () => {
     // Handle Google sign in logic
