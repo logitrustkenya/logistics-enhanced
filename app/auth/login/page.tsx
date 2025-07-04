@@ -88,7 +88,7 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
       }
     )
 
-    if (response.data.success === true) {
+    if (response.status === 200) {
       console.log("Login successful:", response.data)
 
       const userType = response.data.user.userType
