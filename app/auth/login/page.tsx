@@ -66,33 +66,6 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  // const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
-  //   if (e) e.preventDefault()
-  //   setIsSubmitting(true)
-
-  //   if (!validateForm()) {
-  //     setIsSubmitting(false)
-  //     return
-  //   }
-
-  //   try {
-  //     // Handle login logic here
-  //     console.log("Login attempt:", formData)
-
-  //     // Simulate API call
-  //     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  //     // Success handling would go here
-  //     alert("Login successful!")
-  //   } catch (error) {
-  //     setErrors({ general: "Invalid email or password. Please try again." })
-  //   } finally {
-  //     setIsSubmitting(false)
-  //   }
-  // }
-
-
-
 const router = useRouter()
 
 const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
@@ -110,10 +83,23 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
       withCredentials: true,
     })
 
-    // On success
-    alert("Login successful!")
-    router.push("/dashboard") // 🔁 redirect after login
-
+        if (response) {
+          console.log("Login successful:", response.data)
+          //toaster ----ow success message 
+          const userType = response.data.user.userType
+          localStorage.setItem("userType", userType)
+          if (userType === 'admin') {
+            router.push("/dashboard/admin")
+          }
+          else if (userType === 'sme') {
+            router.push("/dashboard/sme")
+          } 
+          else if (userType === 'user') {
+            router.push("/dashboard/user")
+          } else {
+              router.push("/login")
+            }
+    }
   } catch (error: any) {
     if (error.response && error.response.data?.message) {
       setErrors({ general: error.response.data.message })
