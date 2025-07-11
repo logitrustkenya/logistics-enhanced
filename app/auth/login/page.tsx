@@ -66,67 +66,65 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  // const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
-  //   if (e) e.preventDefault()
-  //   setIsSubmitting(true)
-
-  //   if (!validateForm()) {
-  //     setIsSubmitting(false)
-  //     return
-  //   }
-
-  //   try {
-  //     // Handle login logic here
-  //     console.log("Login attempt:", formData)
-
-  //     // Simulate API call
-  //     await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  //     // Success handling would go here
-  //     alert("Login successful!")
-  //   } catch (error) {
-  //     setErrors({ general: "Invalid email or password. Please try again." })
-  //   } finally {
-  //     setIsSubmitting(false)
-  //   }
-  // }
-
-
-
 const router = useRouter()
 
 const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
   if (e) e.preventDefault()
   setIsSubmitting(true)
 
+  // Validate form before submitting
   if (!validateForm()) {
     setIsSubmitting(false)
     return
   }
 
   try {
-    const response = await axios.post("https://logistics-backend-1-rq78.onrender.com/api/login", formData, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    })
+    const response = await axios.post(
+      "https://logistics-backend-1-rq78.onrender.com/api/login",
+      formData,
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    )
 
-    // On success
-    alert("Login successful!")
-    router.push("/dashboard") // 🔁 redirect after login
+    if (response.status === 200) {
+      console.log("Login successful:", response.data)
+
+      const userType = response.data.user.userType
+      localStorage.setItem("userType", userType)
+      localStorage.setItem("token", response.data.token)
+      // Route map instead of nested if/else
+      const dashboardRoutes: Record<string, string> = {
+        admin: "/dashboard/admin",
+        sme: "/dashboard/sme",
+        courier: "/dashboard/courier",
+        provider: "/dashboard/provider",
+        user: "/dashboard/user",
+      }
+
+      const route = dashboardRoutes[userType] || "/"
+      router.push(route)
+
+    } else {
+      setErrors({ general: "Unexpected server response. Try again." })
+    }
 
   } catch (error: any) {
-    if (error.response && error.response.data?.message) {
+    console.error("Login error:", error)
+
+    if (error.response?.data?.message) {
       setErrors({ general: error.response.data.message })
+    } else if (error.message) {
+      setErrors({ general: error.message })
     } else {
-      setErrors({ general: "Invalid email or password. Please try again." })
+      setErrors({ general: "Something went wrong. Try again later." })
     }
+
   } finally {
     setIsSubmitting(false)
   }
 }
-
-
-  
 
   const handleGoogleSignIn = () => {
     // Handle Google sign in logic

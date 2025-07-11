@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Truck, AlertCircle, CheckCircle, Sparkles } from "lucide-react"
+import { toast } from "react-hot-toast"
 
 interface FormData {
   // Common fields
@@ -139,9 +140,9 @@ const handleSubmit = async (e: React.FormEvent) => {
     })
 
     if (response.status === 200 || response.status === 201) {
-      alert("Account created successfully!")
-  console.log("Signup successful:", response.data)
-    router.push("/auth/login")
+      toast.success("Signup successful!")
+      console.log("Signup successful:", response.data)
+      router.push("/auth/login")
     }
     
   } catch (error: any) {
