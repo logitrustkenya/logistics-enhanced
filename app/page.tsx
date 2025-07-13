@@ -129,15 +129,13 @@ export default function Home() {
         {/* Hero Section */}
         <section className="relative w-full py-20 md:py-32 lg:py-40 xl:py-48 overflow-hidden">
           {/* Background Effects */}
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-[#add64e]/5"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(173,214,78,0.1),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(173,214,78,0.05),transparent_50%)]"></div>
+         
 
           <div className="container relative px-4 md:px-6">
             <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:grid-cols-2 items-center">
-              <div className="flex flex-col justify-center space-y-8">
-                <div className="space-y-6">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#add64e]/10 border border-[#add64e]/20 backdrop-blur-sm">
+              <div className="flex flex-col justify-center ">
+                <div className="">
+                  <div className="inline-flex items-center gap-2 px-4 rounded-full bg-[#add64e]/10 border border-[#add64e]/20 backdrop-blur-sm">
                     <Sparkles className="h-4 w-4 text-[#add64e]" />
                     <span className="text-sm font-medium text-[#add64e]">Blockchain-Powered Platform</span>
                   </div>
