@@ -9,56 +9,32 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Truck, AlertCircle, CheckCircle, Sparkles } from "lucide-react"
+import { Truck, AlertCircle, CheckCircle, Sparkles, Building } from "lucide-react"
 import { toast } from "react-hot-toast"
 
 interface FormData {
-  // Common fields
-  firstName: string
-  lastName: string
   email: string
   password: string
   confirmPassword: string
-  phoneNumber: string
+  userType: string
   agreeTerms: boolean
-
-  // SME specific fields
-  companyName?: string
-  companyType?: string
-  businessRegistration?: string
-
-  // Courier specific fields
-  courierCompanyName?: string
-  serviceType?: string
-  licenseNumber?: string
-  experience?: string
-  coverage?: string
-
-  // Individual user specific fields
-  driverLicense?: string
-  vehicleType?: string
-  vehicleRegistration?: string
-  insuranceNumber?: string
 }
 
 interface ValidationErrors {
+  email?: string
   password?: string
   confirmPassword?: string
+  userType?: string
   general?: string
 }
 
 export default function SignupPage() {
-  const [userType, setUserType] = useState("sme")
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    phoneNumber: "",
+    userType: "sme",
     agreeTerms: false,
   })
   const [errors, setErrors] = useState<ValidationErrors>({})
@@ -78,6 +54,12 @@ export default function SignupPage() {
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {}
 
+    if (!formData.email) {
+      newErrors.email = "Email is required"
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email"
+    }
+
     // Validate password length
     if (!validatePassword(formData.password)) {
       newErrors.password = "Password must be at least 8 characters long"
@@ -86,6 +68,14 @@ export default function SignupPage() {
     // Validate password match
     if (!validateConfirmPassword(formData.password, formData.confirmPassword)) {
       newErrors.confirmPassword = "Passwords do not match"
+    }
+
+    if (!formData.userType) {
+      newErrors.userType = "Please select an account type"
+    }
+
+    if (!formData.agreeTerms) {
+      newErrors.general = "You must agree to the terms and conditions"
     }
 
     setErrors(newErrors)
@@ -100,7 +90,7 @@ export default function SignupPage() {
     })
 
     // Clear specific errors when user starts typing
-    if (name === "password" || name === "confirmPassword") {
+    if (name === "password" || name === "confirmPassword" || name === "email") {
       setErrors((prev) => ({
         ...prev,
         [name]: undefined,
@@ -109,11 +99,19 @@ export default function SignupPage() {
     }
   }
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleUserTypeChange = (userType: string) => {
     setFormData({
       ...formData,
-      [name]: value,
+      userType,
     })
+    
+    // Clear userType error when user selects
+    if (errors.userType) {
+      setErrors((prev) => ({
+        ...prev,
+        userType: undefined,
+      }))
+    }
   }
 
 // Next.js router for navigation
@@ -130,8 +128,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const response = await axios.post("https://logistics-backend-1-rq78.onrender.com/api/signup", {
-      userType,
-      ...formData,
+      email: formData.email,
+      password: formData.password,
+      userType: formData.userType,
     }, {
       headers: {
         "Content-Type": "application/json",
@@ -175,281 +174,18 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   }
 
-  const renderUserTypeSpecificFields = () => {
-    switch (userType) {
-      case "sme":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="companyName" className="text-white font-medium">
-                Company/Business Name
-              </Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                value={formData.companyName || ""}
-                onChange={handleChange}
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="companyType" className="text-white font-medium">
-                Company/Business Type
-              </Label>
-              <Select
-                value={formData.companyType || ""}
-                onValueChange={(value) => handleSelectChange("companyType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="retail" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Retail
-                  </SelectItem>
-                  <SelectItem value="manufacturing" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Manufacturing
-                  </SelectItem>
-                  <SelectItem value="agriculture" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Agriculture
-                  </SelectItem>
-                  <SelectItem value="technology" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Technology
-                  </SelectItem>
-                  <SelectItem value="services" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Services
-                  </SelectItem>
-                  <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="businessRegistration" className="text-white font-medium">
-                Business Registration Number
-              </Label>
-              <Input
-                id="businessRegistration"
-                name="businessRegistration"
-                value={formData.businessRegistration || ""}
-                onChange={handleChange}
-                placeholder="Enter registration number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-          </>
-        )
+  const passwordValidation = getPasswordValidationStatus()
 
-      case "courier":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="courierCompanyName" className="text-white font-medium">
-                Company Name
-              </Label>
-              <Input
-                id="courierCompanyName"
-                name="courierCompanyName"
-                value={formData.courierCompanyName || ""}
-                onChange={handleChange}
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="serviceType" className="text-white font-medium">
-                Service Type
-              </Label>
-              <Select
-                value={formData.serviceType || ""}
-                onValueChange={(value) => handleSelectChange("serviceType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select service type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="logistics" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Logistics
-                  </SelectItem>
-                  <SelectItem value="warehousing" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Warehousing
-                  </SelectItem>
-                  <SelectItem value="freight" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Freight Forwarding
-                  </SelectItem>
-                  <SelectItem value="customs" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Customs Clearance
-                  </SelectItem>
-                  <SelectItem value="packaging" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Packaging
-                  </SelectItem>
-                  <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="driverLicense" className="text-white font-medium">
-                User
-              </Label>
-              <Input
-                id="driverLicense"
-                name="driverLicense"
-                value={formData.driverLicense || ""}
-                onChange={handleChange}
-                placeholder="Enter license number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="vehicleType" className="text-white font-medium">
-                Vehicle Type (Optional)
-              </Label>
-              <Select
-                value={formData.vehicleType || ""}
-                onValueChange={(value) => handleSelectChange("vehicleType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select vehicle type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="motorcycle" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Motorcycle
-                  </SelectItem>
-                  <SelectItem value="car" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Car
-                  </SelectItem>
-                  <SelectItem value="van" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Van
-                  </SelectItem>
-                  <SelectItem value="pickup" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Pickup Truck
-                  </SelectItem>
-                  <SelectItem value="truck" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Truck
-                  </SelectItem>
-                  <SelectItem value="bicycle" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Bicycle
-                  </SelectItem>
-                  <SelectItem value="none" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    No Vehicle
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="vehicleRegistration" className="text-white font-medium">
-                Vehicle Registration Number (Optional)
-              </Label>
-              <Input
-                id="vehicleRegistration"
-                name="vehicleRegistration"
-                value={formData.vehicleRegistration || ""}
-                onChange={handleChange}
-                placeholder="e.g., KAA 123A"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="insuranceNumber" className="text-white font-medium">
-                Insurance Policy Number (Optional)
-              </Label>
-              <Input
-                id="insuranceNumber"
-                name="insuranceNumber"
-                value={formData.insuranceNumber || ""}
-                onChange={handleChange}
-                placeholder="Vehicle insurance number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="licenseNumber" className="text-white font-medium">
-                License Number
-              </Label>
-              <Input
-                id="licenseNumber"
-                name="licenseNumber"
-                value={formData.licenseNumber || ""}
-                onChange={handleChange}
-                placeholder="Professional license number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="experience" className="text-white font-medium">
-                Years of Experience
-              </Label>
-              <Select
-                value={formData.experience || ""}
-                onValueChange={(value) => handleSelectChange("experience", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select experience" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="0-2" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    0-2 years
-                  </SelectItem>
-                  <SelectItem value="3-5" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    3-5 years
-                  </SelectItem>
-                  <SelectItem value="6-10" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    6-10 years
-                  </SelectItem>
-                  <SelectItem value="10+" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    10+ years
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="coverage" className="text-white font-medium">
-                Service Coverage Area
-              </Label>
-              <Input
-                id="coverage"
-                name="coverage"
-                value={formData.coverage || ""}
-                onChange={handleChange}
-                placeholder="e.g., Nairobi, Kenya, East Africa"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-          </>
-        )
-
-      case "user":
-        return (
-          <>
-            
-          </>
-        )
-
-      default:
-        return null
-    }
-  }
-
-  const getUserTypeTitle = (type: string) => {
+  const getUserTypeDescription = (type: string) => {
     switch (type) {
       case "sme":
-        return "Small & Medium Enterprise"
-      case "user":
-        return "Individual User"
-      case "courier":
-        return "Logistics Provider"
+        return "I need logistics services for my business"
+      case "provider":
+        return "I provide logistics services to businesses"
       default:
-        return "User"
+        return ""
     }
   }
-
-  const passwordValidation = getPasswordValidationStatus()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-[#add64e]/5 p-6">
@@ -481,7 +217,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         {/* Main Content */}
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-          <div className="w-full max-w-lg">
+          <div className="w-full max-w-md">
             <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
               <CardHeader className="space-y-1 text-center pb-6">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#add64e]/10 border border-[#add64e]/20 backdrop-blur-sm mx-auto mb-4">
@@ -493,36 +229,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                   Create Account
                 </CardTitle>
                 <CardDescription className="text-white/70 text-base">
-                  Sign up as a {getUserTypeTitle(userType)}
+                  Sign up to get started with your logistics journey
                 </CardDescription>
               </CardHeader>
 
               <CardContent>
-                <Tabs defaultValue="sme" className="w-full mb-6" onValueChange={setUserType}>
-                  <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/20 backdrop-blur-sm">
-                    <TabsTrigger
-                      value="sme"
-                      className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-                    >
-                      SME
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="courier"
-                      className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-                    >
-                      Courier
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="user"
-                      className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-                    >
-                      User
-                    </TabsTrigger>
-                  
-                  
-                </TabsList>
-                </Tabs>
-
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Display general error */}
                   {errors.general && (
@@ -532,34 +243,52 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </div>
                   )}
 
-                  {/* Common fields for all user types */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-white font-medium">
-                        First name
-                      </Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                        required
-                      />
+                  {/* Account Type Selection */}
+                  <div className="space-y-3">
+                    <Label className="text-white font-medium">I am a:</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        type="button"
+                        variant={formData.userType === "sme" ? "default" : "outline"}
+                        onClick={() => handleUserTypeChange("sme")}
+                        className={`h-auto p-4 flex flex-col items-center gap-2 ${
+                          formData.userType === "sme" 
+                            ? "bg-[#add64e] text-black hover:bg-[#9bc943]" 
+                            : "border-white/20 text-white hover:bg-white/5"
+                        }`}
+                      >
+                        <Building className="h-6 w-6" />
+                        <div className="text-center">
+                          <div className="font-semibold">SME</div>
+                          <div className="text-xs opacity-80">Business Owner</div>
+                        </div>
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={formData.userType === "provider" ? "default" : "outline"}
+                        onClick={() => handleUserTypeChange("provider")}
+                        className={`h-auto p-4 flex flex-col items-center gap-2 ${
+                          formData.userType === "provider" 
+                            ? "bg-[#add64e] text-black hover:bg-[#9bc943]" 
+                            : "border-white/20 text-white hover:bg-white/5"
+                        }`}
+                      >
+                        <Truck className="h-6 w-6" />
+                        <div className="text-center">
+                          <div className="font-semibold">Provider</div>
+                          <div className="text-xs opacity-80">Service Provider</div>
+                        </div>
+                      </Button>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-white font-medium">
-                        Last name
-                      </Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                        required
-                      />
-                    </div>
+                    {errors.userType && (
+                      <div className="flex items-center space-x-2 text-red-400 text-sm">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{errors.userType}</span>
+                      </div>
+                    )}
+                    <p className="text-xs text-white/60 text-center">
+                      {getUserTypeDescription(formData.userType)}
+                    </p>
                   </div>
 
                   <div className="space-y-2">
@@ -572,28 +301,18 @@ const handleSubmit = async (e: React.FormEvent) => {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
+                      className={`bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300 ${
+                        errors.email ? "border-red-500" : ""
+                      }`}
                       required
                     />
+                    {errors.email && (
+                      <div className="flex items-center space-x-2 text-red-400 text-sm">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{errors.email}</span>
+                      </div>
+                    )}
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phoneNumber" className="text-white font-medium">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      type="tel"
-                      value={formData.phoneNumber}
-                      onChange={handleChange}
-                      className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                      required
-                    />
-                  </div>
-
-                  {/* User type specific fields */}
-                  {renderUserTypeSpecificFields()}
 
                   {/* Password fields with validation */}
                   <div className="space-y-2">
@@ -704,7 +423,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     disabled={isSubmitting}
                     className="w-full bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold shadow-xl hover:shadow-[#add64e]/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    {isSubmitting ? "Creating Account..." : `Create ${getUserTypeTitle(userType)} Account`}
+                    {isSubmitting ? "Creating Account..." : "Create Account"}
                   </Button>
                 </form>
 

@@ -94,17 +94,9 @@ const handleSubmit = async (e?: React.MouseEvent | React.KeyboardEvent) => {
       const userType = response.data.user.userType
       localStorage.setItem("userType", userType)
       localStorage.setItem("token", response.data.token)
-      // Route map instead of nested if/else
-      const dashboardRoutes: Record<string, string> = {
-        admin: "/dashboard/admin",
-        sme: "/dashboard/sme",
-        courier: "/dashboard/courier",
-        provider: "/dashboard/provider",
-        user: "/dashboard/user",
-      }
-
-      const route = dashboardRoutes[userType] || "/"
-      router.push(route)
+      
+      // Redirect to profile page to complete setup
+      router.push("/profile")
 
     } else {
       setErrors({ general: "Unexpected server response. Try again." })
