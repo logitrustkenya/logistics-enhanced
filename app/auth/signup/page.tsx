@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-  import axios from "axios"
+import axios from "axios"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -174,273 +174,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   }
 
-  const renderUserTypeSpecificFields = () => {
-    switch (userType) {
-      case "sme":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="companyName" className="text-white font-medium">
-                Company/Business Name
-              </Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                value={formData.companyName || ""}
-                onChange={handleChange}
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="companyType" className="text-white font-medium">
-                Company/Business Type
-              </Label>
-              <Select
-                value={formData.companyType || ""}
-                onValueChange={(value) => handleSelectChange("companyType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="retail" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Retail
-                  </SelectItem>
-                  <SelectItem value="manufacturing" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Manufacturing
-                  </SelectItem>
-                  <SelectItem value="agriculture" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Agriculture
-                  </SelectItem>
-                  <SelectItem value="technology" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Technology
-                  </SelectItem>
-                  <SelectItem value="services" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Services
-                  </SelectItem>
-                  <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="businessRegistration" className="text-white font-medium">
-                Business Registration Number
-              </Label>
-              <Input
-                id="businessRegistration"
-                name="businessRegistration"
-                value={formData.businessRegistration || ""}
-                onChange={handleChange}
-                placeholder="Enter registration number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-          </>
-        )
-
-      case "courier":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="courierCompanyName" className="text-white font-medium">
-                Company Name
-              </Label>
-              <Input
-                id="courierCompanyName"
-                name="courierCompanyName"
-                value={formData.courierCompanyName || ""}
-                onChange={handleChange}
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="serviceType" className="text-white font-medium">
-                Service Type
-              </Label>
-              <Select
-                value={formData.serviceType || ""}
-                onValueChange={(value) => handleSelectChange("serviceType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select service type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="logistics" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Logistics
-                  </SelectItem>
-                  <SelectItem value="warehousing" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Warehousing
-                  </SelectItem>
-                  <SelectItem value="freight" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Freight Forwarding
-                  </SelectItem>
-                  <SelectItem value="customs" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Customs Clearance
-                  </SelectItem>
-                  <SelectItem value="packaging" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Packaging
-                  </SelectItem>
-                  <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="driverLicense" className="text-white font-medium">
-                User
-              </Label>
-              <Input
-                id="driverLicense"
-                name="driverLicense"
-                value={formData.driverLicense || ""}
-                onChange={handleChange}
-                placeholder="Enter license number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="vehicleType" className="text-white font-medium">
-                Vehicle Type (Optional)
-              </Label>
-              <Select
-                value={formData.vehicleType || ""}
-                onValueChange={(value) => handleSelectChange("vehicleType", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select vehicle type" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="motorcycle" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Motorcycle
-                  </SelectItem>
-                  <SelectItem value="car" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Car
-                  </SelectItem>
-                  <SelectItem value="van" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Van
-                  </SelectItem>
-                  <SelectItem value="pickup" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Pickup Truck
-                  </SelectItem>
-                  <SelectItem value="truck" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Truck
-                  </SelectItem>
-                  <SelectItem value="bicycle" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    Bicycle
-                  </SelectItem>
-                  <SelectItem value="none" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    No Vehicle
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="vehicleRegistration" className="text-white font-medium">
-                Vehicle Registration Number (Optional)
-              </Label>
-              <Input
-                id="vehicleRegistration"
-                name="vehicleRegistration"
-                value={formData.vehicleRegistration || ""}
-                onChange={handleChange}
-                placeholder="e.g., KAA 123A"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="insuranceNumber" className="text-white font-medium">
-                Insurance Policy Number (Optional)
-              </Label>
-              <Input
-                id="insuranceNumber"
-                name="insuranceNumber"
-                value={formData.insuranceNumber || ""}
-                onChange={handleChange}
-                placeholder="Vehicle insurance number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="licenseNumber" className="text-white font-medium">
-                License Number
-              </Label>
-              <Input
-                id="licenseNumber"
-                name="licenseNumber"
-                value={formData.licenseNumber || ""}
-                onChange={handleChange}
-                placeholder="Professional license number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="experience" className="text-white font-medium">
-                Years of Experience
-              </Label>
-              <Select
-                value={formData.experience || ""}
-                onValueChange={(value) => handleSelectChange("experience", value)}
-              >
-                <SelectTrigger className="bg-white/5 border-white/20 text-white focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm">
-                  <SelectValue placeholder="Select experience" className="text-white/50" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900/95 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="0-2" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    0-2 years
-                  </SelectItem>
-                  <SelectItem value="3-5" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    3-5 years
-                  </SelectItem>
-                  <SelectItem value="6-10" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    6-10 years
-                  </SelectItem>
-                  <SelectItem value="10+" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    10+ years
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="coverage" className="text-white font-medium">
-                Service Coverage Area
-              </Label>
-              <Input
-                id="coverage"
-                name="coverage"
-                value={formData.coverage || ""}
-                onChange={handleChange}
-                placeholder="e.g., Nairobi, Kenya, East Africa"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/50 focus:border-[#add64e] focus:ring-[#add64e] backdrop-blur-sm transition-all duration-300"
-                required
-              />
-            </div>
-          </>
-        )
-
-      case "user":
-        return (
-          <>
-            
-          </>
-        )
-
-      default:
-        return null
-    }
-  }
-
   const getUserTypeTitle = (type: string) => {
     switch (type) {
       case "sme":
         return "Small & Medium Enterprise"
-      case "user":
-        return "Individual User"
       case "courier":
         return "Logistics Provider"
       default:
@@ -498,7 +235,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
               <CardContent>
                 <Tabs defaultValue="sme" className="w-full mb-6" onValueChange={setUserType}>
-                  <TabsList className="grid w-full grid-cols-3 bg-white/5 border border-white/20 backdrop-blur-sm">
+                  <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/20 backdrop-blur-sm">
                     <TabsTrigger
                       value="sme"
                       className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
@@ -511,15 +248,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     >
                       Courier
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="user"
-                      className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-                    >
-                      User
-                    </TabsTrigger>
-                  
-                  
-                </TabsList>
+                  </TabsList>
                 </Tabs>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -590,9 +319,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                       required
                     />
                   </div>
-
-                  {/* User type specific fields */}
-                  {renderUserTypeSpecificFields()}
 
                   {/* Password fields with validation */}
                   <div className="space-y-2">
