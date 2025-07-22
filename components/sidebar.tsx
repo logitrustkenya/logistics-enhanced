@@ -6,8 +6,9 @@ import { Truck, Users, BarChart3, Home } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 import { useState } from "react"
 import { X } from "lucide-react"
+import type { FC } from "react"
 
-export const Sidebar = () => {
+export const Sidebar: FC<{ minimized?: boolean }> = ({ minimized = false }) => {
   const pathname = usePathname()
   const isMobile = useMobile()
   const [isOpen, setIsOpen] = useState(false)
@@ -78,14 +79,14 @@ export const Sidebar = () => {
           </aside>
         </>
       ) : (
-        <aside className="hidden md:block w-64 flex-shrink-0 border-r border-white/10">
+        <aside className={`hidden md:block ${minimized ? "w-16" : "w-64"} flex-shrink-0 border-r border-white/10 transition-all duration-200`}>
           <div className="flex flex-col h-full p-4">
-            <Link href="/" className="flex items-center space-x-2 mb-6">
+            <Link href="/" className="flex items-center space-x-2 mb-6 justify-center md:justify-start">
               <div className="relative">
                 <Truck className="h-7 w-7 text-[#add64e]" />
                 <div className="absolute -top-1 -right-1 h-3 w-3 bg-[#add64e] rounded-full animate-pulse"></div>
               </div>
-              <span className="text-lg font-bold text-white">LogitrustKenya</span>
+              {!minimized && <span className="text-lg font-bold text-white">LogitrustKenya</span>}
             </Link>
             <nav className="flex-1">
               <ul className="space-y-2">
@@ -93,12 +94,12 @@ export const Sidebar = () => {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className={`flex items-center space-x-3 p-3 rounded-md hover:bg-white/5 transition-colors ${
+                      className={`flex items-center ${minimized ? "justify-center" : "space-x-3"} p-3 rounded-md hover:bg-white/5 transition-colors ${
                         pathname === item.href ? "bg-white/10 text-[#add64e]" : "text-white/70"
                       }`}
                     >
                       <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      {!minimized && <span>{item.label}</span>}
                     </Link>
                   </li>
                 ))}

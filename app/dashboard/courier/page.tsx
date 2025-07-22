@@ -1,390 +1,180 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import React, { useEffect } from 'react';
+// @ts-ignore
+import 'leaflet/dist/leaflet.css';
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Line, Doughnut } from 'react-chartjs-2';
 import {
-  Truck,
-  Package,
-  CreditCard,
-  Star,
-  MapPin,
-  Clock,
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-  Calendar,
-} from "lucide-react"
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
 
-export default function ProviderDashboard() {
-  const [activeTab, setActiveTab] = useState("overview")
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
-  // Placeholders for logistics provider data
-  const stats: any[] = []
-  const activeJobs: any[] = []
-  const recentCompletions: any[] = []
-  const performanceMetrics: any[] = []
+const stats = [
+  { label: 'Request For Quotation', value: 0, icon: '🛒' },
+  { label: "Today's Revenue", value: 'Ksh 7,000', icon: '💸' },
+  { label: 'Shipments', value: 50, icon: '📦' },
+  { label: 'Total Warehouse', value: 100, icon: '🏢' },
+];
+
+const products = [
+  {
+    name: 'Red velvet frostings',
+    branch: 'Abuja Branch',
+    price: 'Ksh 7,000',
+    quantity: 5,
+    image: '/public/placeholder.jpg',
+  },
+  // ...repeat as needed
+];
+
+const locations = [
+  { name: 'Kisumu, Kenya', details: 'View Details', lat: -0.0917, lng: 34.7679 },
+  { name: 'Nbo, Kenya', details: 'View Details', lat: -1.286389, lng: 36.817223 },
+];
+
+// Chart Data
+const lineData = {
+  labels: ['NBO', 'MSA', 'KSM', 'BGM', 'MYL', 'NYK', 'NVS', 'USA'],
+  datasets: [
+    {
+      label: 'Shipments',
+      data: [20000, 40000, 15000, 18000, 32000, 30000, 17000, 12000],
+      borderColor: '#add64e',
+      backgroundColor: 'rgba(173, 214, 78, 0.2)',
+      tension: 0.4,
+      pointBackgroundColor: '#9bc943',
+      pointBorderColor: '#add64e',
+      fill: true,
+    },
+  ],
+};
+const lineOptions = {
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+    title: { display: false },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: { color: '#9bc943' },
+      grid: { color: 'rgba(173,214,78,0.1)' },
+    },
+    x: {
+      ticks: { color: '#add64e' },
+      grid: { color: 'rgba(173,214,78,0.05)' },
+    },
+  },
+};
+
+const doughnutData = {
+  labels: ['Ontime', 'In Progress', 'Delayed'],
+  datasets: [
+    {
+      data: [78, 78, 78],
+      backgroundColor: ['#add64e', '#9bc943', '#f87171'],
+      borderWidth: 2,
+      borderColor: '#fff',
+      hoverOffset: 8,
+    },
+  ],
+};
+const doughnutOptions = {
+  cutout: '70%',
+  plugins: {
+    legend: { display: false },
+    tooltip: { enabled: true },
+  },
+};
+
+const ProviderDashboard = () => {
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-[#add64e]/5 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Provider Dashboard
-            </h1>
-            <p className="text-white/70 mt-2">Manage your logistics operations and earnings</p>
+      {/* Top Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {stats.map((stat, i) => (
+          <div key={i} className="bg-background/80 backdrop-blur-xl rounded-xl shadow p-4 flex flex-col items-center border border-[#add64e]/10">
+            <div className="text-3xl mb-2 text-[#add64e]">{stat.icon}</div>
+            <div className="text-gray-500 text-sm mb-1">{stat.label}</div>
+            <div className="text-xl font-bold text-[#9bc943]">{stat.value}</div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5 bg-transparent">
-              <Calendar className="mr-2 h-4 w-4" />
-              Schedule
-            </Button>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
-            >
-              <Package className="mr-2 h-4 w-4" />
-              Browse Jobs
-            </Button>
+        ))}
+      </div>
+
+      {/* Analytics and Deliveries */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Weekly Shipments Chart */}
+        <div className="bg-background/80 backdrop-blur-xl rounded-xl shadow p-6 border border-[#add64e]/10">
+          <div className="font-semibold mb-2 text-[#add64e]">Weekly Shipments Chart</div>
+          <div className="h-64 flex items-center justify-center">
+            <Line data={lineData} options={lineOptions} />
           </div>
         </div>
+        {/* Deliveries Donut Chart */}
+        <div className="bg-background/80 backdrop-blur-xl rounded-xl shadow p-6 flex flex-col items-center justify-center border border-[#add64e]/10">
+          <div className="font-semibold mb-2 text-[#add64e]">Deliveries</div>
+          <div className="h-40 w-40 flex items-center justify-center">
+            <Doughnut data={doughnutData} options={doughnutOptions} />
+            <div className="text-2xl font-bold text-[#add64e]">78%</div>
+          </div>
+          <button className="mt-4 px-4 py-2 bg-[#add64e]/10 text-[#add64e] rounded-lg border border-[#add64e]/20 hover:bg-[#add64e]/20 transition">Download Statistics</button>
+        </div>
+      </div>
 
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
-            <TabsTrigger
-              value="overview"
-              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-            >
-              Overview
-            </TabsTrigger>
-            <TabsTrigger
-              value="jobs"
-              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-            >
-              Active Jobs
-            </TabsTrigger>
-            <TabsTrigger
-              value="earnings"
-              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-            >
-              Earnings
-            </TabsTrigger>
-            <TabsTrigger
-              value="performance"
-              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-            >
-              Performance
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {stats.map((stat, i) => (
-                <Card
-                  key={i}
-                  className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
-                >
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-white">{stat.title}</CardTitle>
-                    <stat.icon className="h-4 w-4 text-[#add64e]" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-white">{stat.value}</div>
-                    <p className="text-xs text-white/70">{stat.description}</p>
-                    <div className="mt-2 flex items-center text-xs">
-                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">{stat.change}</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Main Content Grid */}
-            <div className="grid gap-6 lg:grid-cols-3">
-              {/* Active Jobs */}
-              <Card className="lg:col-span-2 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Active Jobs</CardTitle>
-                  <CardDescription className="text-white/70">Your current logistics assignments</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {activeJobs.map((job) => (
-                      <div
-                        key={job.id}
-                        className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-[#add64e]/30 transition-all duration-300"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-2">
-                            <Truck className="h-4 w-4 text-[#add64e]" />
-                            <span className="text-sm font-medium text-white">{job.id}</span>
-                            <Badge
-                              className={
-                                job.priority === "urgent"
-                                  ? "bg-red-500/20 text-red-400 border-red-500/30"
-                                  : job.priority === "high"
-                                    ? "bg-orange-500/20 text-orange-400 border-orange-500/30"
-                                    : "bg-blue-500/20 text-blue-400 border-blue-500/30"
-                              }
-                            >
-                              {job.priority}
-                            </Badge>
-                          </div>
-                          <span className="text-sm font-medium text-[#add64e]">{job.value}</span>
-                        </div>
-
-                        <div className="space-y-2 text-sm">
-                          <div className="flex items-center justify-between">
-                            <span className="text-white/70">Client:</span>
-                            <span className="text-white">{job.client}</span>
-                          </div>
-                          <div className="flex items-center space-x-1 text-white/70">
-                            <MapPin className="h-3 w-3" />
-                            <span>
-                              {job.origin} → {job.destination}
-                            </span>
-                            <span className="text-white/50">({job.distance})</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-white/70">Items:</span>
-                            <span className="text-white">{job.items}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-1 text-white/70">
-                              <Clock className="h-3 w-3" />
-                              <span>Due: {job.deadline}</span>
-                            </div>
-                            <Badge
-                              className={
-                                job.status === "in-progress"
-                                  ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
-                                  : job.status === "pending"
-                                    ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                                    : "bg-green-500/20 text-green-400 border-green-500/30"
-                              }
-                            >
-                              {job.status.replace("-", " ")}
-                            </Badge>
-                          </div>
-                        </div>
-
-                        <div className="mt-3 flex gap-2">
-                          <Button
-                            size="sm"
-                            className="flex-1 bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
-                          >
-                            Update Status
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-white/20 text-white hover:bg-white/5 bg-transparent"
-                          >
-                            View Details
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Stats */}
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Today's Summary</CardTitle>
-                  <CardDescription className="text-white/70">Your daily performance</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-400" />
-                      <span className="text-sm text-white">Completed</span>
-                    </div>
-                    <span className="text-sm font-medium text-white">3 jobs</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <AlertCircle className="h-4 w-4 text-yellow-400" />
-                      <span className="text-sm text-white">In Progress</span>
-                    </div>
-                    <span className="text-sm font-medium text-white">5 jobs</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <CreditCard className="h-4 w-4 text-[#add64e]" />
-                      <span className="text-sm text-white">Earnings</span>
-                    </div>
-                    <span className="text-sm font-medium text-white">KSh 28,400</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-blue-400" />
-                      <span className="text-sm text-white">Distance</span>
-                    </div>
-                    <span className="text-sm font-medium text-white">342 km</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Completions & Performance */}
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Recent Completions</CardTitle>
-                  <CardDescription className="text-white/70">Your latest successful deliveries</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentCompletions.map((completion) => (
-                      <div key={completion.id} className="p-3 bg-white/5 rounded-lg border border-white/10">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-white">{completion.id}</span>
-                          <span className="text-sm font-medium text-[#add64e]">{completion.value}</span>
-                        </div>
-                        <div className="space-y-1 text-xs text-white/70">
-                          <p>Client: {completion.client}</p>
-                          <p>Route: {completion.route}</p>
-                          <p>Completed: {completion.completedDate}</p>
-                          <div className="flex items-center space-x-1">
-                            <Star className="h-3 w-3 fill-current text-yellow-400" />
-                            <span>{completion.rating}/5.0</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Performance Metrics</CardTitle>
-                  <CardDescription className="text-white/70">Key performance indicators</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {performanceMetrics.map((metric, index) => (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-white/70">{metric.label}</span>
-                          <span className="text-white font-medium">{metric.value}</span>
-                        </div>
-                        <div className="text-xs text-[#add64e]">{metric.change}</div>
-                        {index < performanceMetrics.length - 1 && <div className="border-t border-white/10 pt-2" />}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="jobs" className="space-y-6">
-            <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-              <CardHeader>
-                <CardTitle className="text-white">All Active Jobs</CardTitle>
-                <CardDescription className="text-white/70">Manage your current assignments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {activeJobs.map((job) => (
-                    <div key={job.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <Truck className="h-5 w-5 text-[#add64e]" />
-                          <div>
-                            <p className="text-sm font-medium text-white">{job.id}</p>
-                            <p className="text-xs text-white/70">{job.client}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-[#add64e]">{job.value}</p>
-                          <Badge
-                            className={
-                              job.status === "in-progress"
-                                ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
-                                : job.status === "pending"
-                                  ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                                  : "bg-green-500/20 text-green-400 border-green-500/30"
-                            }
-                          >
-                            {job.status.replace("-", " ")}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+      {/* Store Locations and Products In Stock */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Store Locations Map */}
+        <div className="bg-background/80 backdrop-blur-xl rounded-xl shadow p-6 border border-[#add64e]/10">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-semibold text-[#add64e]">Store Locations</span>
+            <span className="text-[#add64e] text-sm font-medium cursor-pointer">In Europe ▼</span>
+          </div>
+          {/* Map Placeholder */}
+          <div className="h-64 flex items-center justify-center text-gray-400 bg-gray-100 rounded-lg">[Map will appear here]</div>
+        </div>
+        {/* Products In Stock */}
+        <div className="bg-background/80 backdrop-blur-xl rounded-xl shadow p-6 border border-[#add64e]/10">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-semibold text-[#add64e]">Products In Stock</span>
+            <span className="text-[#add64e] text-sm font-medium cursor-pointer">View All</span>
+          </div>
+          <ul>
+            {products.map((product, i) => (
+              <li key={i} className="flex items-center py-2 border-b last:border-b-0 border-[#add64e]/10">
+                <img src={product.image} alt="product" className="w-12 h-12 rounded object-cover mr-4 border border-[#add64e]/20" />
+                <div className="flex-1">
+                  <div className="font-medium text-sm text-[#9bc943]">{product.name}</div>
+                  <div className="text-xs text-gray-500">{product.branch}</div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="earnings" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-3">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">This Month</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">KSh 284,500</div>
-                  <p className="text-xs text-white/70">+22% from last month</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">This Week</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">KSh 68,200</div>
-                  <p className="text-xs text-white/70">+15% from last week</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Today</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">KSh 12,400</div>
-                  <p className="text-xs text-white/70">3 jobs completed</p>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="performance" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Service Rating Trend</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <Star className="h-16 w-16 text-[#add64e]/50" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Completion Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <TrendingUp className="h-16 w-16 text-[#add64e]/50" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+                <div className="text-sm text-[#add64e]">{product.price} <span className="text-xs">× {product.quantity}</span></div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
+export default ProviderDashboard;

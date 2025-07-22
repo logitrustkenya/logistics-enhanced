@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -10,137 +10,196 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { User, Mail, Phone, Building, MapPin, Bell, Shield, CreditCard, LogOut, Truck, Package } from "lucide-react"
+import { User, Mail, Phone, Building, MapPin, Bell, Shield, CreditCard, LogOut, Truck, AlertCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+interface ProfileData {
+  // Personal Information
+  firstName: string
+  lastName: string
+  email: string
+  phoneNumber: string
+  address: string
+  language: string
+  
+  // User Type and Business Details
+  userType: string
+  
+  // SME specific fields
+  companyName: string
+  companyType: string
+  businessRegistration: string
+  
+  // Provider specific fields
+  providerCompanyName: string
+  serviceType: string
+  licenseNumber: string
+  experience: string
+  coverage: string
+  
+  // Vehicle Information (for providers)
+  vehicleType: string
+  vehicleRegistration: string
+  insuranceNumber: string
+  driverLicense: string
+}
 
 export default function UnifiedProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
+  const [userType, setUserType] = useState("sme")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<any>({})
+  const router = useRouter()
   
-  // This would come from your authentication/user context
-  const [userType, setUserType] = useState("courier") // "user", "sme", "courier"
-  
-  // Unified form data that contains all possible fields
-  const [formData, setFormData] = useState({
-    // Common fields
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    phone: "+254 712 345 678",
-    address: "123 Kimathi Street, Nairobi, Kenya",
+  const [profileData, setProfileData] = useState<ProfileData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
     language: "en",
-    
-    // SME specific fields
-    companyName: "Acme Inc",
-    companyType: "retail",
-    businessRegistration: "KE123456789",
-    
-    // Courier specific fields
-    courierCompanyName: "FastDelivery Ltd",
-    serviceType: "logistics",
-    driverLicense: "DL123456",
-    vehicleType: "van",
-    vehicleRegistration: "KAA 123A",
-    insuranceNumber: "INS789456",
-    licenseNumber: "PL654321",
-    experience: "3-5",
-    coverage: "Nairobi, Kenya"
+    userType: "sme",
+    companyName: "",
+    companyType: "",
+    businessRegistration: "",
+    providerCompanyName: "",
+    serviceType: "",
+    licenseNumber: "",
+    experience: "",
+    coverage: "",
+    vehicleType: "",
+    vehicleRegistration: "",
+    insuranceNumber: "",
+    driverLicense: "",
   })
 
-  interface CommonFormData {
-    firstName: string
-    lastName: string
-    email: string
-    phone: string
-    address: string
-    language: string
-  }
-
-  interface SmeFormData {
-    companyName: string
-    companyType: string
-    businessRegistration: string
-  }
-
-  interface CourierFormData {
-    courierCompanyName: string
-    serviceType: string
-    driverLicense: string
-    vehicleType: string
-    vehicleRegistration: string
-    insuranceNumber: string
-    licenseNumber: string
-    experience: string
-    coverage: string
-  }
-
-  type UnifiedFormData = CommonFormData & SmeFormData & CourierFormData
-
-  type UserType = "user" | "sme" | "courier"
-  type TabType = "profile" | "business" | "notifications" | "security" | "payment"
+  useEffect(() => {
+    // Load user data from localStorage or API
+    const storedUserType = localStorage.getItem("userType")
+    if (storedUserType) {
+      setUserType(storedUserType)
+      setProfileData(prev => ({ ...prev, userType: storedUserType }))
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
-
-  interface HandleSelectChangeProps {
-    name: keyof UnifiedFormData
-    value: string
-  }
-
-  const handleSelectChange = (name: keyof UnifiedFormData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const getUserTypeDisplay = () => {
-    switch(userType) {
-      case "sme": return "SME"
-      case "courier": return "Courier"
-      case "user": return "User"
-      default: return "User"
+    const { name, value } = e.target
+    setProfileData({
+      ...profileData,
+      [name]: value,
+    })
+    
+    // Clear errors when user starts typing
+    if (errors[name]) {
+      setErrors((prev: any) => ({
+        ...prev,
+        [name]: undefined,
+      }))
     }
   }
 
-  const getUserTypeBadgeColor = () => {
-    switch(userType) {
-      case "sme": return "bg-blue-100 text-blue-700"
-      case "courier": return "bg-orange-100 text-orange-700"
-      case "user": return "bg-green-100 text-[#add64e]"
-      default: return "bg-green-100 text-[#add64e]"
+  const handleSelectChange = (name: string, value: string) => {
+    setProfileData({
+      ...profileData,
+      [name]: value,
+    })
+  }
+
+  const handleUserTypeChange = (value: string) => {
+    setUserType(value)
+    setProfileData(prev => ({ ...prev, userType: value }))
+    localStorage.setItem("userType", value)
+  }
+
+  const validateForm = () => {
+    const newErrors: any = {}
+
+    if (!profileData.firstName) newErrors.firstName = "First name is required"
+    if (!profileData.lastName) newErrors.lastName = "Last name is required"
+    if (!profileData.email) newErrors.email = "Email is required"
+    if (!profileData.phoneNumber) newErrors.phoneNumber = "Phone number is required"
+
+    if (userType === "sme") {
+      if (!profileData.companyName) newErrors.companyName = "Company name is required"
+      if (!profileData.companyType) newErrors.companyType = "Company type is required"
+    }
+
+    if (userType === "provider") {
+      if (!profileData.providerCompanyName) newErrors.providerCompanyName = "Company name is required"
+      if (!profileData.serviceType) newErrors.serviceType = "Service type is required"
+      if (!profileData.licenseNumber) newErrors.licenseNumber = "License number is required"
+      if (!profileData.coverage) newErrors.coverage = "Coverage area is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true)
+    
+    if (!validateForm()) {
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      // Here you would typically send the profile data to your API
+      console.log("Saving profile data:", profileData)
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Redirect to dashboard after successful profile setup
+      router.push("/dashboard")
+      
+    } catch (error) {
+      console.error("Error saving profile:", error)
+      setErrors({ general: "Failed to save profile. Please try again." })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  // Render business details based on user type
-  const renderBusinessDetails = () => {
+  const getUserTypeTitle = (type: string) => {
+    switch (type) {
+      case "sme":
+        return "Small & Medium Enterprise"
+      case "provider":
+        return "Logistics Provider"
+      default:
+        return "User"
+    }
+  }
+
+  const renderUserTypeSpecificFields = () => {
     switch (userType) {
       case "sme":
         return (
-          <>
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="companyName">Company/Business Name</Label>
-              <div className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-slate-500" />
-                <Input 
-                  id="companyName" 
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  className="flex-1" 
-                />
-              </div>
+              <Input
+                id="companyName"
+                name="companyName"
+                value={profileData.companyName}
+                onChange={handleChange}
+                className={errors.companyName ? "border-red-500" : ""}
+              />
+              {errors.companyName && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.companyName}</span>
+                </div>
+              )}
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="companyType">Company/Business Type</Label>
               <Select
-                value={formData.companyType}
+                value={profileData.companyType}
                 onValueChange={(value) => handleSelectChange("companyType", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className={errors.companyType ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -152,45 +211,52 @@ export default function UnifiedProfilePage() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.companyType && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.companyType}</span>
+                </div>
+              )}
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="businessRegistration">Business Registration Number</Label>
-              <Input 
-                id="businessRegistration" 
+              <Input
+                id="businessRegistration"
                 name="businessRegistration"
-                value={formData.businessRegistration}
+                value={profileData.businessRegistration}
                 onChange={handleChange}
                 placeholder="Enter registration number"
               />
             </div>
-          </>
+          </div>
         )
 
-      case "courier":
+      case "provider":
         return (
-          <>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="courierCompanyName">Company Name</Label>
-              <div className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-slate-500" />
-                <Input 
-                  id="courierCompanyName" 
-                  name="courierCompanyName"
-                  value={formData.courierCompanyName}
-                  onChange={handleChange}
-                  className="flex-1" 
-                />
-              </div>
+              <Label htmlFor="providerCompanyName">Company Name</Label>
+              <Input
+                id="providerCompanyName"
+                name="providerCompanyName"
+                value={profileData.providerCompanyName}
+                onChange={handleChange}
+                className={errors.providerCompanyName ? "border-red-500" : ""}
+              />
+              {errors.providerCompanyName && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.providerCompanyName}</span>
+                </div>
+              )}
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="serviceType">Service Type</Label>
               <Select
-                value={formData.serviceType}
+                value={profileData.serviceType}
                 onValueChange={(value) => handleSelectChange("serviceType", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className={errors.serviceType ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select service type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -202,81 +268,34 @@ export default function UnifiedProfilePage() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.serviceType && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.serviceType}</span>
+                </div>
+              )}
             </div>
-            
             <div className="space-y-2">
-              <Label htmlFor="driverLicense">Driver License</Label>
-              <Input 
-                id="driverLicense" 
-                name="driverLicense"
-                value={formData.driverLicense}
-                onChange={handleChange}
-                placeholder="Enter license number"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="vehicleType">Vehicle Type</Label>
-              <Select
-                value={formData.vehicleType}
-                onValueChange={(value) => handleSelectChange("vehicleType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select vehicle type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="motorcycle">Motorcycle</SelectItem>
-                  <SelectItem value="car">Car</SelectItem>
-                  <SelectItem value="van">Van</SelectItem>
-                  <SelectItem value="pickup">Pickup Truck</SelectItem>
-                  <SelectItem value="truck">Truck</SelectItem>
-                  <SelectItem value="bicycle">Bicycle</SelectItem>
-                  <SelectItem value="none">No Vehicle</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="vehicleRegistration">Vehicle Registration Number</Label>
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-slate-500" />
-                <Input 
-                  id="vehicleRegistration" 
-                  name="vehicleRegistration"
-                  value={formData.vehicleRegistration}
-                  onChange={handleChange}
-                  placeholder="e.g., KAA 123A"
-                  className="flex-1"
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="insuranceNumber">Insurance Policy Number</Label>
-              <Input 
-                id="insuranceNumber" 
-                name="insuranceNumber"
-                value={formData.insuranceNumber}
-                onChange={handleChange}
-                placeholder="Vehicle insurance number"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="licenseNumber">Professional License Number</Label>
-              <Input 
-                id="licenseNumber" 
+              <Label htmlFor="licenseNumber">License Number</Label>
+              <Input
+                id="licenseNumber"
                 name="licenseNumber"
-                value={formData.licenseNumber}
+                value={profileData.licenseNumber}
                 onChange={handleChange}
                 placeholder="Professional license number"
+                className={errors.licenseNumber ? "border-red-500" : ""}
               />
+              {errors.licenseNumber && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.licenseNumber}</span>
+                </div>
+              )}
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="experience">Years of Experience</Label>
               <Select
-                value={formData.experience}
+                value={profileData.experience}
                 onValueChange={(value) => handleSelectChange("experience", value)}
               >
                 <SelectTrigger>
@@ -290,29 +309,78 @@ export default function UnifiedProfilePage() {
                 </SelectContent>
               </Select>
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="coverage">Service Coverage Area</Label>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-slate-500" />
-                <Input 
-                  id="coverage" 
-                  name="coverage"
-                  value={formData.coverage}
+              <Input
+                id="coverage"
+                name="coverage"
+                value={profileData.coverage}
+                onChange={handleChange}
+                placeholder="e.g., Nairobi, Kenya, East Africa"
+                className={errors.coverage ? "border-red-500" : ""}
+              />
+              {errors.coverage && (
+                <div className="flex items-center space-x-2 text-red-500 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{errors.coverage}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Vehicle Information for Providers */}
+            <div className="space-y-4 pt-4 border-t">
+              <h3 className="text-lg font-semibold">Vehicle Information (Optional)</h3>
+              <div className="space-y-2">
+                <Label htmlFor="vehicleType">Vehicle Type</Label>
+                <Select
+                  value={profileData.vehicleType}
+                  onValueChange={(value) => handleSelectChange("vehicleType", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select vehicle type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="motorcycle">Motorcycle</SelectItem>
+                    <SelectItem value="car">Car</SelectItem>
+                    <SelectItem value="van">Van</SelectItem>
+                    <SelectItem value="pickup">Pickup Truck</SelectItem>
+                    <SelectItem value="truck">Truck</SelectItem>
+                    <SelectItem value="bicycle">Bicycle</SelectItem>
+                    <SelectItem value="none">No Vehicle</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="vehicleRegistration">Vehicle Registration Number</Label>
+                <Input
+                  id="vehicleRegistration"
+                  name="vehicleRegistration"
+                  value={profileData.vehicleRegistration}
                   onChange={handleChange}
-                  placeholder="e.g., Nairobi, Kenya, East Africa"
-                  className="flex-1"
+                  placeholder="e.g., KAA 123A"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="insuranceNumber">Insurance Policy Number</Label>
+                <Input
+                  id="insuranceNumber"
+                  name="insuranceNumber"
+                  value={profileData.insuranceNumber}
+                  onChange={handleChange}
+                  placeholder="Vehicle insurance number"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="driverLicense">Driver License Number</Label>
+                <Input
+                  id="driverLicense"
+                  name="driverLicense"
+                  value={profileData.driverLicense}
+                  onChange={handleChange}
+                  placeholder="Driver license number"
                 />
               </div>
             </div>
-          </>
-        )
-
-      case "user":
-        return (
-          <div className="text-center py-8 text-slate-500">
-            <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No additional business details required for regular users.</p>
           </div>
         )
 
@@ -324,24 +392,11 @@ export default function UnifiedProfilePage() {
   return (
     <div className="flex flex-col gap-4 p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Profile Settings</h1>
-        <div className="flex items-center gap-4">
-          {/* User Type Switcher - for demo purposes */}
-          <Select value={userType} onValueChange={setUserType}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="sme">SME</SelectItem>
-              <SelectItem value="courier">Courier</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-            <LogOut className="mr-2 h-4 w-4" />
-            Log Out
-          </Button>
-        </div>
+        <h1 className="text-2xl font-bold tracking-tight">Complete Your Profile</h1>
+        <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+          <LogOut className="mr-2 h-4 w-4" />
+          Log Out
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -351,14 +406,14 @@ export default function UnifiedProfilePage() {
               <Avatar className="h-24 w-24">
                 <AvatarImage src="/placeholder.svg" alt="User" />
                 <AvatarFallback className="text-lg">
-                  {formData.firstName?.[0]}{formData.lastName?.[0]}
+                  {profileData.firstName?.[0]}{profileData.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="text-center">
-                <h2 className="text-xl font-bold">{formData.firstName} {formData.lastName}</h2>
-                <p className="text-sm text-slate-600">{formData.email}</p>
-                <Badge className={`mt-2 ${getUserTypeBadgeColor()}`}>
-                  {getUserTypeDisplay()}
+                <h2 className="text-xl font-bold">Complete Setup</h2>
+                <p className="text-sm text-slate-600">Please complete your profile</p>
+                <Badge className="mt-2 bg-green-100 text-green-700 hover:bg-green-100">
+                  {getUserTypeTitle(userType)}
                 </Badge>
               </div>
               <Button className="w-full bg-[#add64e] hover:bg-[#96c442]">Change Avatar</Button>
@@ -434,18 +489,32 @@ export default function UnifiedProfilePage() {
                       <Input 
                         id="firstName" 
                         name="firstName"
-                        value={formData.firstName}
+                        value={profileData.firstName}
                         onChange={handleChange}
+                        className={errors.firstName ? "border-red-500" : ""}
                       />
+                      {errors.firstName && (
+                        <div className="flex items-center space-x-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4" />
+                          <span>{errors.firstName}</span>
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input 
                         id="lastName" 
                         name="lastName"
-                        value={formData.lastName}
+                        value={profileData.lastName}
                         onChange={handleChange}
+                        className={errors.lastName ? "border-red-500" : ""}
                       />
+                      {errors.lastName && (
+                        <div className="flex items-center space-x-2 text-red-500 text-sm">
+                          <AlertCircle className="h-4 w-4" />
+                          <span>{errors.lastName}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -455,24 +524,36 @@ export default function UnifiedProfilePage() {
                       <Input 
                         id="email" 
                         name="email"
-                        value={formData.email}
+                        value={profileData.email}
                         onChange={handleChange}
-                        className="flex-1" 
+                        className={`flex-1 ${errors.email ? "border-red-500" : ""}`}
                       />
                     </div>
+                    {errors.email && (
+                      <div className="flex items-center space-x-2 text-red-500 text-sm">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{errors.email}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phoneNumber">Phone Number</Label>
                     <div className="flex items-center gap-2">
                       <Phone className="h-4 w-4 text-slate-500" />
                       <Input 
-                        id="phone" 
-                        name="phone"
-                        value={formData.phone}
+                        id="phoneNumber" 
+                        name="phoneNumber"
+                        value={profileData.phoneNumber}
                         onChange={handleChange}
-                        className="flex-1" 
+                        className={`flex-1 ${errors.phoneNumber ? "border-red-500" : ""}`}
                       />
                     </div>
+                    {errors.phoneNumber && (
+                      <div className="flex items-center space-x-2 text-red-500 text-sm">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>{errors.phoneNumber}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Address</Label>
@@ -481,7 +562,7 @@ export default function UnifiedProfilePage() {
                       <Textarea 
                         id="address" 
                         name="address"
-                        value={formData.address}
+                        value={profileData.address}
                         onChange={handleChange}
                         className="flex-1" 
                       />
@@ -490,7 +571,7 @@ export default function UnifiedProfilePage() {
                   <div className="space-y-2">
                     <Label htmlFor="language">Preferred Language</Label>
                     <Select 
-                      value={formData.language}
+                      value={profileData.language}
                       onValueChange={(value) => handleSelectChange("language", value)}
                     >
                       <SelectTrigger>
@@ -502,7 +583,6 @@ export default function UnifiedProfilePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="bg-[#add64e] hover:bg-[#96c442]">Save Changes</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -520,10 +600,39 @@ export default function UnifiedProfilePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {renderBusinessDetails()}
-                  {userType !== 'user' && (
-                    <Button className="bg-[#add64e] hover:bg-[#96c442]">Save Changes</Button>
-                  )}
+                  <div className="space-y-2">
+                    <Label>Account Type</Label>
+                    <div className="flex gap-4">
+                      <Button
+                        variant={userType === "sme" ? "default" : "outline"}
+                        onClick={() => handleUserTypeChange("sme")}
+                        className="flex-1"
+                      >
+                        <Building className="mr-2 h-4 w-4" />
+                        SME
+                      </Button>
+                      <Button
+                        variant={userType === "provider" ? "default" : "outline"}
+                        onClick={() => handleUserTypeChange("provider")}
+                        className="flex-1"
+                      >
+                        <Truck className="mr-2 h-4 w-4" />
+                        Provider
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {renderUserTypeSpecificFields()}
+                  
+                  <div className="pt-4">
+                    <Button 
+                      onClick={handleSubmit}
+                      disabled={isSubmitting}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                    >
+                      {isSubmitting ? "Saving..." : "Save and Continue to Dashboard"}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -558,72 +667,31 @@ export default function UnifiedProfilePage() {
                         </div>
                       </div>
                     </div>
-                    
-                    {(userType === 'sme' || userType === 'courier') && (
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label>Quote Requests</Label>
-                          <p className="text-sm text-slate-600">
-                            Receive notifications when you receive new quotes
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center space-x-2">
-                            <Switch id="quote-email" defaultChecked />
-                            <Label htmlFor="quote-email" className="text-sm">Email</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="quote-sms" defaultChecked />
-                            <Label htmlFor="quote-sms" className="text-sm">SMS</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="quote-push" defaultChecked />
-                            <Label htmlFor="quote-push" className="text-sm">Push</Label>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <Label>Payment Updates</Label>
+                        <Label>Quote Requests</Label>
                         <p className="text-sm text-slate-600">
-                          Receive notifications about payment status changes
+                          Receive notifications when you receive new quotes
                         </p>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center space-x-2">
-                          <Switch id="payment-email" defaultChecked />
-                          <Label htmlFor="payment-email" className="text-sm">Email</Label>
+                          <Switch id="quote-email" defaultChecked />
+                          <Label htmlFor="quote-email" className="text-sm">
+                            Email
+                          </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Switch id="payment-sms" defaultChecked />
-                          <Label htmlFor="payment-sms" className="text-sm">SMS</Label>
+                          <Switch id="quote-sms" />
+                          <Label htmlFor="quote-sms" className="text-sm">
+                            SMS
+                          </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Switch id="payment-push" defaultChecked />
-                          <Label htmlFor="payment-push" className="text-sm">Push</Label>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label>Marketing</Label>
-                        <p className="text-sm text-slate-600">Receive promotional offers and updates</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Switch id="marketing-email" />
-                          <Label htmlFor="marketing-email" className="text-sm">Email</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Switch id="marketing-sms" />
-                          <Label htmlFor="marketing-sms" className="text-sm">SMS</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Switch id="marketing-push" />
-                          <Label htmlFor="marketing-push" className="text-sm">Push</Label>
+                          <Switch id="quote-push" defaultChecked />
+                          <Label htmlFor="quote-push" className="text-sm">
+                            Push
+                          </Label>
                         </div>
                       </div>
                     </div>
@@ -641,36 +709,18 @@ export default function UnifiedProfilePage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="current-password">Current Password</Label>
-                    <Input id="current-password" type="password" />
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <Input id="currentPassword" type="password" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="new-password">New Password</Label>
-                    <Input id="new-password" type="password" />
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <Input id="newPassword" type="password" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm New Password</Label>
-                    <Input id="confirm-password" type="password" />
+                    <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
+                    <Input id="confirmNewPassword" type="password" />
                   </div>
-                  <div className="pt-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label>Two-Factor Authentication</Label>
-                        <p className="text-sm text-slate-600">Add an extra layer of security to your account</p>
-                      </div>
-                      <Switch id="2fa" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label>Login Notifications</Label>
-                        <p className="text-sm text-slate-600">
-                          Receive notifications when someone logs into your account
-                        </p>
-                      </div>
-                      <Switch id="login-notifications" defaultChecked />
-                    </div>
-                  </div>
-                  <Button className="bg-[#add64e] hover:bg-[#96c442]">Update Security Settings</Button>
+                  <Button className="bg-green-600 hover:bg-green-700">Update Password</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -682,30 +732,18 @@ export default function UnifiedProfilePage() {
                   <CardDescription>Manage your payment methods</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <CreditCard className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-medium">M-Pesa</h3>
-                          <p className="text-sm text-slate-600">Connected • Primary</p>
-                        </div>
-                      </div>
-                      <Button variant="outline" size="sm">Manage</Button>
+                  <div className="space-y-2">
+                    <Label htmlFor="cardNumber">Card Number</Label>
+                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="expiry">Expiry Date</Label>
+                      <Input id="expiry" placeholder="MM/YY" />
                     </div>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                          <CreditCard className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Credit Card</h3>
-                          <p className="text-sm text-slate-600">**** **** **** 4242</p>
-                        </div>
-                      </div>
-                      <Button variant="outline" size="sm">Manage</Button>
+                    <div className="space-y-2">
+                      <Label htmlFor="cvv">CVV</Label>
+                      <Input id="cvv" placeholder="123" />
                     </div>
                   </div>
                   <Button className="bg-[#add64e] hover:bg-[#96c442]">Add Payment Method</Button>
