@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, Package, CreditCard, Users, BarChart3, Leaf, TrendingUp, MapPin } from "lucide-react"
+import { ArrowUpRight, Package, CreditCard, Users, BarChart3, Leaf, TrendingUp, MapPin, Truck } from "lucide-react"
 import Link from "next/link"
 
 interface StatCard {
@@ -83,39 +83,40 @@ export default function SMEDashboard() {
   ]
 
   const recentShipments: Shipment[] = [
-    {
-      id: "Loading...",
-      origin: "Loading origin...",
-      destination: "Loading destination...",
-      status: "pending",
-      provider: "Loading provider...",
-      date: "--",
-      items: "Loading items...",
-      progress: 0,
-      value: "KSh --",
-    },
-    {
-      id: "Loading...",
-      origin: "Loading origin...",
-      destination: "Loading destination...",
-      status: "pending",
-      provider: "Loading provider...",
-      date: "--",
-      items: "Loading items...",
-      progress: 0,
-      value: "KSh --",
-    },
-    {
-      id: "Loading...",
-      origin: "Loading origin...",
-      destination: "Loading destination...",
-      status: "pending",
-      provider: "Loading provider...",
-      date: "--",
-      items: "Loading items...",
-      progress: 0,
-      value: "KSh --",
-    },
+    // Uncomment these for dummy data display:
+    // {
+    //   id: "SH001",
+    //   origin: "Nairobi",
+    //   destination: "Mombasa",
+    //   status: "in-transit",
+    //   provider: "Kenya Logistics Co.",
+    //   date: "2024-01-15",
+    //   items: "Electronics (5 items)",
+    //   progress: 65,
+    //   value: "KSh 45,000",
+    // },
+    // {
+    //   id: "SH002",
+    //   origin: "Kisumu",
+    //   destination: "Eldoret",
+    //   status: "pending",
+    //   provider: "Swift Transport",
+    //   date: "2024-01-16",
+    //   items: "Textiles (12 items)",
+    //   progress: 0,
+    //   value: "KSh 28,500",
+    // },
+    // {
+    //   id: "SH003",
+    //   origin: "Nakuru",
+    //   destination: "Nairobi",
+    //   status: "delivered",
+    //   provider: "Express Delivery",
+    //   date: "2024-01-14",
+    //   items: "Food Products (8 items)",
+    //   progress: 100,
+    //   value: "KSh 15,200",
+    // },
   ]
 
   const costAnalysis: CostAnalysis[] = [
@@ -135,32 +136,27 @@ export default function SMEDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-[#add64e]/5 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              SME Dashboard
-            </h1>
-            <p className="text-white/70 mt-2">Manage your business logistics operations</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5 bg-transparent">
-              <ArrowUpRight className="mr-2 h-4 w-4" />
-              Export Report
-            </Button>
-            <Link href="/shipments/create">
-              <Button
-                size="sm"
-                className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
-              >
-                <Package className="mr-2 h-4 w-4" />
-                New Shipment
-              </Button>
-            </Link>
-          </div>
-        </div>
+        
 
         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
+   
+            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5 bg-transparent">
+                <ArrowUpRight className="mr-2 h-4 w-4" />
+                Export Report
+              </Button>
+              <Link href="/shipments/create">
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-[#add64e] to-[#9bc943] hover:from-[#9bc943] hover:to-[#add64e] text-black font-semibold"
+                >
+                  <Package className="mr-2 h-4 w-4" />
+                  New Shipment
+                </Button>
+              </Link>
+            </div>
+            <TabsList className="bg-white/5 border border-white/20 backdrop-blur-sm">
             <TabsTrigger
               value="overview"
               className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
@@ -173,12 +169,7 @@ export default function SMEDashboard() {
             >
               Shipments
             </TabsTrigger>
-            <TabsTrigger
-              value="analytics"
-              className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
-            >
-              Analytics
-            </TabsTrigger>
+          
             <TabsTrigger
               value="providers"
               className="data-[state=active]:bg-[#add64e] data-[state=active]:text-black text-white/70"
@@ -186,6 +177,9 @@ export default function SMEDashboard() {
               Providers
             </TabsTrigger>
           </TabsList>
+          </div>
+        
+          
 
           <TabsContent value="overview" className="space-y-6">
             {/* Stats Cards */}
@@ -260,19 +254,46 @@ export default function SMEDashboard() {
                               </p>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-white">{shipment.value}</p>
-                            <p className="text-xs text-white/70">{shipment.date}</p>
-                            <div className="w-20 mt-1">
-                              <Progress value={shipment.progress} className="h-1" />
+                          <div className="flex items-center space-x-4">
+                            <div className="text-right">
+                              <p className="text-sm font-medium text-white">{shipment.value}</p>
+                              <p className="text-xs text-white/70">{shipment.date}</p>
+                              <div className="w-20 mt-1">
+                                <Progress value={shipment.progress} className="h-1" />
+                              </div>
                             </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-[#add64e]/10 border-[#add64e]/30 text-[#add64e] hover:bg-[#add64e]/20 hover:text-white"
+                              onClick={() => {
+                                // Add your tracking logic here
+                                console.log(`Tracking shipment: ${shipment.id}`)
+                              }}
+                            >
+                              <Truck className="h-4 w-4 mr-1" />
+                              Track
+                            </Button>
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="text-center py-8 text-white/50">
-                        <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>No shipments found</p>
+                      <div className="text-center py-12 text-white/50">
+                        <Package className="h-16 w-16 mx-auto mb-4 opacity-30" />
+                        <h3 className="text-lg font-medium text-white/70 mb-2">No shipments yet</h3>
+                        <p className="text-sm text-white/50 mb-4">
+                          Your recent shipments will appear here once you start using our logistics services.
+                        </p>
+                        <Button
+                          className="bg-[#add64e] hover:bg-[#add64e]/90 text-white"
+                          onClick={() => {
+                            // Add navigation to create shipment page
+                            console.log("Navigate to create shipment")
+                          }}
+                        >
+                          <Package className="h-4 w-4 mr-2" />
+                          Create First Shipment
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -309,57 +330,7 @@ export default function SMEDashboard() {
             </div>
 
             {/* Environmental Impact */}
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Leaf className="h-5 w-5 text-[#add64e]" />
-                    Carbon Footprint
-                  </CardTitle>
-                  <CardDescription className="text-white/70">Environmental impact tracking</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-2xl font-bold text-white">-- kg CO₂</p>
-                        <p className="text-sm text-white/70">This month</p>
-                      </div>
-                      <Badge className="bg-[#add64e]/20 text-[#add64e] border-[#add64e]/30">-- reduction</Badge>
-                    </div>
-                    <Progress value={0} className="h-2" />
-                    <p className="text-xs text-white/70">No data available</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Performance Metrics</CardTitle>
-                  <CardDescription className="text-white/70">Key operational indicators</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">--</p>
-                      <p className="text-xs text-white/70">Avg. Days</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">--%</p>
-                      <p className="text-xs text-white/70">Success Rate</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">--</p>
-                      <p className="text-xs text-white/70">Avg. Rating</p>
-                    </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
-                      <p className="text-2xl font-bold text-white">KSh --</p>
-                      <p className="text-xs text-white/70">Avg. Cost</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+           
           </TabsContent>
 
           <TabsContent value="shipments" className="space-y-6">
@@ -405,55 +376,51 @@ export default function SMEDashboard() {
                             </p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-white">{shipment.value}</p>
-                          <p className="text-xs text-white/70">{shipment.date}</p>
-                          <div className="w-20 mt-1">
-                            <Progress value={shipment.progress} className="h-1" />
+                        <div className="flex items-center space-x-4">
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-white">{shipment.value}</p>
+                            <p className="text-xs text-white/70">{shipment.date}</p>
+                            <div className="w-20 mt-1">
+                              <Progress value={shipment.progress} className="h-1" />
+                            </div>
                           </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-[#add64e]/10 border-[#add64e]/30 text-[#add64e] hover:bg-[#add64e]/20 hover:text-white"
+                            onClick={() => {
+                              // Add your tracking logic here
+                              console.log(`Tracking shipment: ${shipment.id}`)
+                            }}
+                          >
+                            <Truck className="h-4 w-4 mr-1" />
+                            Track
+                          </Button>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-8 text-white/50">
-                      <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No shipments found</p>
+                    <div className="text-center py-12 text-white/50">
+                      <Package className="h-16 w-16 mx-auto mb-4 opacity-30" />
+                      <h3 className="text-lg font-medium text-white/70 mb-2">No shipments yet</h3>
+                      <p className="text-sm text-white/50 mb-4">
+                        Your recent shipments will appear here once you start using our logistics services.
+                      </p>
+                      <Button
+                        className="bg-[#add64e] hover:bg-[#add64e]/90 text-white"
+                        onClick={() => {
+                          // Add navigation to create shipment page
+                          console.log("Navigate to create shipment")
+                        }}
+                      >
+                        <Package className="h-4 w-4 mr-2" />
+                        Create First Shipment
+                      </Button>
                     </div>
                   )}
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Monthly Trends</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <div className="text-center">
-                      <BarChart3 className="h-16 w-16 text-[#add64e]/50 mx-auto mb-2" />
-                      <p className="text-white/50 text-sm">Chart will appear here</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white">Route Analysis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px] flex items-center justify-center bg-white/5 rounded-md border border-white/10">
-                    <div className="text-center">
-                      <MapPin className="h-16 w-16 text-[#add64e]/50 mx-auto mb-2" />
-                      <p className="text-white/50 text-sm">Map will appear here</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
 
           <TabsContent value="providers" className="space-y-6">
@@ -489,4 +456,3 @@ export default function SMEDashboard() {
     </div>
   )
 }
-
