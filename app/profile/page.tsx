@@ -44,7 +44,7 @@ interface ProfileData {
   driverLicense: string
 }
 
-export default function ProfilePage() {
+export default function UnifiedProfilePage() {
   const [activeTab, setActiveTab] = useState("profile")
   const [userType, setUserType] = useState("sme")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -405,7 +405,9 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
                 <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback className="text-lg">JD</AvatarFallback>
+                <AvatarFallback className="text-lg">
+                  {profileData.firstName?.[0]}{profileData.lastName?.[0]}
+                </AvatarFallback>
               </Avatar>
               <div className="text-center">
                 <h2 className="text-xl font-bold">Complete Setup</h2>
@@ -414,13 +416,13 @@ export default function ProfilePage() {
                   {getUserTypeTitle(userType)}
                 </Badge>
               </div>
-              <Button className="w-full bg-green-600 hover:bg-green-700">Change Avatar</Button>
+              <Button className="w-full bg-[#add64e] hover:bg-[#96c442]">Change Avatar</Button>
             </div>
 
             <div className="mt-6 space-y-1">
               <Button 
                 variant="ghost" 
-                className={`w-full justify-start ${activeTab === 'profile' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                className={`w-full justify-start ${activeTab === 'profile' ? 'text-white bg-[#add64e]' : 'text-green-600 hover:text-green-700 hover:bg-green-50'}`} 
                 onClick={() => setActiveTab("profile")}
               >
                 <User className="mr-2 h-4 w-4" />
@@ -428,15 +430,15 @@ export default function ProfilePage() {
               </Button>
               <Button 
                 variant="ghost" 
-                className={`w-full justify-start ${activeTab === 'business' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                className={`w-full justify-start ${activeTab === 'business' ? 'text-white bg-[#add64e]' : 'text-green-600 hover:text-green-700 hover:bg-green-50'}`} 
                 onClick={() => setActiveTab("business")}
               >
                 <Building className="mr-2 h-4 w-4" />
-                Business Details
+                {userType === 'courier' ? 'Courier Details' : userType === 'sme' ? 'Business Details' : 'Additional Info'}
               </Button>
               <Button 
                 variant="ghost" 
-                className={`w-full justify-start ${activeTab === 'notifications' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                className={`w-full justify-start ${activeTab === 'notifications' ? 'text-white bg-[#add64e]' : 'text-green-600 hover:text-green-700 hover:bg-green-50'}`} 
                 onClick={() => setActiveTab("notifications")}
               >
                 <Bell className="mr-2 h-4 w-4" />
@@ -444,7 +446,7 @@ export default function ProfilePage() {
               </Button>
               <Button 
                 variant="ghost" 
-                className={`w-full justify-start ${activeTab === 'security' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                className={`w-full justify-start ${activeTab === 'security' ? 'text-white bg-[#add64e]' : 'text-green-600 hover:text-green-700 hover:bg-green-50'}`} 
                 onClick={() => setActiveTab("security")}
               >
                 <Shield className="mr-2 h-4 w-4" />
@@ -452,7 +454,7 @@ export default function ProfilePage() {
               </Button>
               <Button 
                 variant="ghost" 
-                className={`w-full justify-start ${activeTab === 'payment' ? 'bg-green-50 text-green-700' : 'text-green-600 hover:text-green-700'}`} 
+                className={`w-full justify-start ${activeTab === 'payment' ? 'text-white bg-[#add64e]' : 'text-green-600 hover:text-green-700 hover:bg-green-50'}`} 
                 onClick={() => setActiveTab("payment")}
               >
                 <CreditCard className="mr-2 h-4 w-4" />
@@ -463,10 +465,12 @@ export default function ProfilePage() {
         </Card>
 
         <div className="md:col-span-3">
-          <Tabs defaultValue="profile" value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="business">Business</TabsTrigger>
+              <TabsTrigger value="business">
+                {userType === 'courier' ? 'Courier' : userType === 'sme' ? 'Business' : 'Info'}
+              </TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="security">Security</TabsTrigger>
               <TabsTrigger value="payment">Payment</TabsTrigger>
@@ -586,8 +590,14 @@ export default function ProfilePage() {
             <TabsContent value="business" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Business Details</CardTitle>
-                  <CardDescription>Update your business information</CardDescription>
+                  <CardTitle>
+                    {userType === 'courier' ? 'Courier Details' : userType === 'sme' ? 'Business Details' : 'Additional Information'}
+                  </CardTitle>
+                  <CardDescription>
+                    {userType === 'courier' ? 'Update your courier and vehicle information' : 
+                     userType === 'sme' ? 'Update your business information' : 
+                     'Additional account information'}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -645,21 +655,15 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center space-x-2">
                           <Switch id="shipment-email" defaultChecked />
-                          <Label htmlFor="shipment-email" className="text-sm">
-                            Email
-                          </Label>
+                          <Label htmlFor="shipment-email" className="text-sm">Email</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Switch id="shipment-sms" defaultChecked />
-                          <Label htmlFor="shipment-sms" className="text-sm">
-                            SMS
-                          </Label>
+                          <Label htmlFor="shipment-sms" className="text-sm">SMS</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Switch id="shipment-push" defaultChecked />
-                          <Label htmlFor="shipment-push" className="text-sm">
-                            Push
-                          </Label>
+                          <Label htmlFor="shipment-push" className="text-sm">Push</Label>
                         </div>
                       </div>
                     </div>
@@ -692,7 +696,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Save Preferences</Button>
+                  <Button className="bg-[#add64e] hover:bg-[#96c442]">Save Preferences</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -742,7 +746,7 @@ export default function ProfilePage() {
                       <Input id="cvv" placeholder="123" />
                     </div>
                   </div>
-                  <Button className="bg-green-600 hover:bg-green-700">Add Payment Method</Button>
+                  <Button className="bg-[#add64e] hover:bg-[#96c442]">Add Payment Method</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -752,4 +756,3 @@ export default function ProfilePage() {
     </div>
   )
 }
-

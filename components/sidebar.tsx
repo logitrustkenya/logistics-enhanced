@@ -29,11 +29,6 @@ export const Sidebar: FC<{ minimized?: boolean }> = ({ minimized = false }) => {
       icon: Truck,
     },
     {
-      label: "Analytics",
-      href: "/analytics",
-      icon: BarChart3,
-    },
-    {
       label: "Providers",
       href: "/providers",
       icon: Users,

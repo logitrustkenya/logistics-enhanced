@@ -54,9 +54,9 @@ export function RecentActivity() {
             />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-            <p className="text-sm text-gray-500">{activity.description}</p>
-            <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
+            <p className="text-base font-medium text-gray-100">{activity.title}</p>
+            <p className="text-sm text-white/70">{activity.description}</p>
+            <p className="text-xs text-white/70 mt-1">{activity.time}</p>
           </div>
         </div>
       ))}

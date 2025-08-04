@@ -1,5 +1,5 @@
 {
-  "name": "Logitrustke",
+  "name": "logistics-enhanced",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -48,6 +48,7 @@
     "input-otp": "1.4.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.454.0",
+    "mongodb": "^6.0.0",
     "next": "15.2.4",
     "next-themes": "^0.4.4",
     "react": "^18.0.0",

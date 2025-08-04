@@ -83,7 +83,7 @@ export default function CreateShipmentPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <Link href="/shipments">
-          <Button variant="outline" size="icon">
+          <Button className="p-2 border rounded-full">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -403,12 +403,12 @@ export default function CreateShipmentPage() {
         </CardContent>
         <CardFooter className="flex justify-between">
           {step > 1 ? (
-            <Button variant="outline" onClick={prevStep}>
+            <Button onClick={prevStep}>
               Previous
             </Button>
           ) : (
             <Link href="/shipments">
-              <Button variant="outline">Cancel</Button>
+              <Button>Cancel</Button>
             </Link>
           )}
           {step < 4 ? (
