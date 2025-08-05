@@ -15,32 +15,93 @@ export default function LoginPage() {
 
   // Handle OAuth callback if coming from Google
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    const token = urlParams.get('token')
-    const userType = urlParams.get('userType')
-    const error = urlParams.get('error')
+    // Load Google Identity Services on component mount
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
 
-    if (error) {
-      toast.error('Login failed. Please try again.')
-    } else if (token && userType) {
-      // Store auth data
-      localStorage.setItem('token', token)
-      localStorage.setItem('userType', userType)
-      toast.success('Welcome back!')
-      router.push('/dashboard')
+    // Cleanup
+    return () => {
+      const existingScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]')
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript)
+      }
     }
-  }, [router])
+  }, [])
 
   const handleGoogleLogin = async () => {
     setIsSubmitting(true)
     
     try {
-      // Redirect to Google OAuth endpoint
-      window.location.href = "https://logistics-backend-1-rq78.onrender.com/api/auth/google/login"
+      // Use Google Identity Services (modern approach)
+      if (typeof window !== 'undefined' && window.google) {
+        window.google.accounts.id.initialize({
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID",
+          callback: handleGoogleCallback,
+        })
+        
+        window.google.accounts.id.prompt()
+      } else {
+        // Fallback: Load Google Identity Services
+        loadGoogleIdentityServices()
+      }
       
     } catch (error: any) {
       console.error("Google login error:", error)
       toast.error("Failed to initiate Google login. Please try again.")
+      setIsSubmitting(false)
+    }
+  }
+
+  const loadGoogleIdentityServices = () => {
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = () => {
+      window.google.accounts.id.initialize({
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID",
+        callback: handleGoogleCallback,
+      })
+      window.google.accounts.id.prompt()
+    }
+    document.head.appendChild(script)
+  }
+
+  const handleGoogleCallback = async (response: any) => {
+    try {
+      // Send the Google credential to your existing backend
+      const backendResponse = await fetch("https://logistics-backend-1-rq78.onrender.com/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          googleCredential: response.credential,
+          authMethod: "google"
+        }),
+      })
+
+      const data = await backendResponse.json()
+
+      if (backendResponse.ok) {
+        const userType = data.user?.userType || data.userType
+        localStorage.setItem("userType", userType)
+        localStorage.setItem("token", data.token)
+        
+        toast.success("Welcome back!")
+        router.push("/profile")
+      } else {
+        throw new Error(data.message || "Login failed")
+      }
+      
+    } catch (error: any) {
+      console.error("Google callback error:", error)
+      toast.error(error.message || "Login failed. Please try again.")
+    } finally {
       setIsSubmitting(false)
     }
   }
